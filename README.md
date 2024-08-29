@@ -1,10 +1,14 @@
-# BlockFeedback
-
 ![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/susumutomita/ETHOnline2024)
 ![GitHub top language](https://img.shields.io/github/languages/top/susumutomita/ETHOnline2024)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/susumutomita/ETHOnline2024)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/susumutomita/ETHOnline2024)
 ![GitHub repo size](https://img.shields.io/github/repo-size/susumutomita/ETHOnline2024)
+
+# BlockFeedback
+
+<div style="text-align: center;">
+  <img src="./images/logo.png" width="200" height="200" alt="block_feedback Logo"/>
+</div>
 
 ## Overview
 
