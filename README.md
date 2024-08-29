@@ -10,6 +10,52 @@
 
 BlockFeedback is a blockchain-based real-time feedback and reward system designed for retail environments, such as convenience stores and shops. This decentralized platform allows customers to provide instant feedback on their shopping experiences and receive immediate rewards like tokens or discount coupons. By leveraging blockchain technology, BlockFeedback ensures data integrity and transparency while protecting customer privacy, enhancing consumer engagement and the quality of feedback.
 
+**New Enhancements:**
+- **Sign Protocol Integration**: Provides cryptographic signing to ensure feedback authenticity and tamper-proofing, enhancing the trustworthiness of feedback data.
+- **Avail Integration**: Offers scalable data availability solutions, improving data access and performance across multiple retail locations.
+
+## System Overview
+
+BlockFeedback is a decentralized, blockchain-based platform designed to enhance customer engagement and data integrity in retail environments. It combines multiple cutting-edge technologies to provide a secure, efficient, and user-friendly real-time feedback and reward system. The system architecture integrates privacy-preserving protocols, cross-chain communication, and scalable data availability solutions. This ensures that both customers and store owners benefit from reliable and actionable feedback.
+
+### System Architecture Diagram
+
+```mermaid
+graph TD
+    A[Customer] -->|Connect Wallet| B[Web3Auth]
+    B -->|Authentication Complete| C[Next.js Frontend]
+    C -->|Submit Feedback| D[Sign Protocol]
+    D -->|Digital Signature| E[Send to Blockchain]
+    E -->|Encryption via zkTLS| F[Smart Contracts (Foundry)]
+    F -->|Store Data| G[Mina Protocol]
+    F -->|Store Data| H[Avail]
+    F -->|Issue Tokens| I[Send via LayerZero to Other Chains]
+    I -->|Receive Tokens| J[Customer Wallet]
+    F -->|Real-Time Analysis| K[Store Analytics Dashboard]
+    K -->|Optimize Marketing Strategy| L[Data Analysis Tools]
+```
+
+### Key Components
+
+1. **User Interface**: A mobile-friendly web interface built with Next.js allows customers to easily provide feedback by scanning a QR code at the store. The interface is optimized for speed and usability, ensuring a seamless user experience.
+
+2. **Authentication**: Web3Auth is integrated to enable simple, secure, non-custodial authentication using existing social media accounts. This lowers the barrier to entry for users who may be new to blockchain technology.
+
+3. **Feedback Submission and Security**: Feedback is collected and cryptographically signed using **Sign Protocol**, ensuring authenticity and preventing tampering. Data is encrypted and transmitted securely using **zkTLS**, providing an additional layer of privacy and security.
+
+4. **Blockchain Storage**: Feedback data is stored using the **Mina Protocol**, known for its lightweight and privacy-preserving blockchain capabilities. This ensures that feedback is kept secure and anonymous, protecting user identities.
+
+5. **Data Availability**: **Avail** is used to manage scalable data storage and availability, enhancing the performance and reliability of the system across multiple retail locations. This makes feedback data accessible for real-time analysis and reporting.
+
+6. **Reward Distribution**: Smart contracts developed with Foundry handle the issuance of tokens or coupons as rewards. By utilizing **LayerZero** for cross-chain compatibility, rewards can be distributed across various blockchain networks, providing flexibility and scalability.
+
+7. **Real-Time Analytics**: Store owners have access to a comprehensive dashboard that provides insights into customer feedback. This dashboard is built using data visualization tools that aggregate and display feedback, enabling data-driven decisions for marketing and customer service improvements.
+
+### Summary
+
+BlockFeedback combines the strengths of blockchain technology with advanced security and data management protocols to create a robust feedback system.
+The system integrates Sign Protocol to ensure data authenticity. It also uses Avail for scalable data management. These integrations provide high security, reliability, and usability. This positions BlockFeedback as a leading solution for customer engagement in the retail sector.
+
 ## Features
 
 - **Real-Time Feedback Collection:** Customers can scan a QR code in-store to provide feedback instantly through a mobile-friendly interface.
@@ -18,17 +64,8 @@ BlockFeedback is a blockchain-based real-time feedback and reward system designe
 - **Privacy Protection:** By using zkTLS and Mina Protocol, BlockFeedback ensures that customer identities and feedback remain private.
 - **Cross-Chain Compatibility:** LayerZero is used for seamless cross-chain data sharing and reward distribution.
 - **User-Friendly Authentication:** Integration with Web3Auth allows easy, non-custodial login using social media accounts.
-
-## Architecture
-
-BlockFeedback is composed of several key components:
-
-1. **Frontend**: Built with Next.js, providing a smooth and responsive user experience for feedback submission and reward collection.
-2. **Backend**: Smart contracts developed with Foundry manage reward issuance and secure feedback data storage on the blockchain.
-3. **Privacy and Security**: zkTLS ensures secure and encrypted data transmission, protecting customer data.
-4. **Blockchain Network**: Mina Protocol provides lightweight blockchain capabilities for secure, anonymous feedback collection.
-5. **Cross-Chain Communication**: LayerZero enables data sharing and reward issuance across various blockchain networks, ensuring scalability.
-6. **Authentication**: Web3Auth offers a non-custodial, easy-to-use authentication mechanism, allowing secure social media-based login.
+- **Feedback Authenticity:** **Sign Protocol** ensures that all feedback entries are cryptographically signed, preventing tampering and verifying the authenticity of the data.
+- **Scalable Data Availability:** **Avail** provides a scalable solution for managing feedback data, ensuring that information is readily accessible and performant across different retail locations.
 
 ## How to Run the Project
 
@@ -85,6 +122,8 @@ BlockFeedback is composed of several key components:
 - **Mina Protocol:** For privacy-preserving feedback collection.
 - **LayerZero:** For cross-chain data sharing and reward distribution.
 - **Web3Auth:** For non-custodial authentication and easy login.
+- **Sign Protocol:** For cryptographic signing of feedback to ensure data authenticity and integrity.
+- **Avail:** For scalable data availability and performance optimization across retail locations.
 
 ## Future Roadmap
 
