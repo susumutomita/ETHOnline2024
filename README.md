@@ -26,21 +26,13 @@ graph TD
     B -->|Authentication Complete| C[Next.js Frontend]
     C -->|Submit Feedback| D[Sign Protocol]
     D -->|Digital Signature| E[Send to Blockchain]
-    E -->|Encryption via zkTLS| F[Smart Contracts (Foundry)]
+    E -->|Encryption via zkTLS| F[Smart Contracts]
     F -->|Store Data| G[Mina Protocol]
     F -->|Store Data| H[Avail]
     F -->|Issue Tokens| I[Send via LayerZero to Other Chains]
     I -->|Receive Tokens| J[Customer Wallet]
-    F -->|Real-Time Analysis| K[Store Analytics Dashboard]
-    K -->|Optimize Marketing Strategy| L[Data Analysis Tools]
-
-    subgraph Feedback Processing
-        D
-        E
-        F
-        G
-        H
-    end
+    F -->|Real-Time Analysis| K[Analytics Dashboard]
+    K -->|Optimize Marketing| L[Data Analysis Tools]
 ```
 
 ### Key Components
