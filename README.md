@@ -33,6 +33,14 @@ graph TD
     I -->|Receive Tokens| J[Customer Wallet]
     F -->|Real-Time Analysis| K[Store Analytics Dashboard]
     K -->|Optimize Marketing Strategy| L[Data Analysis Tools]
+
+    subgraph Feedback Processing
+        D
+        E
+        F
+        G
+        H
+    end
 ```
 
 ### Key Components
