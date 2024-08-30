@@ -19,7 +19,12 @@ const ChefProfileForm: React.FC<Props> = ({ onSubmit, initialData }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit({ name, description, specialty });
+    try {
+      await onSubmit({ name, description, specialty });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("Failed to submit form. Please try again.");
+    }
   };
 
   return (
