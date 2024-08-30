@@ -17,7 +17,6 @@ export default function ChefProfilePage() {
   const [contractAddress, setContractAddress] = useState<string>("");
 
   const handleSubmit = async (profileData: ProfileData) => {
-    console.log("Submitting profile data:", profileData);
     setSubmitting(true);
     setError(null);
 
