@@ -26,12 +26,10 @@
   "author": "Susumu Tomita <oyter880@gmail.com> (https://susumutomita.netlify.app/)",
   "license": "MIT",
   "dependencies": {
-    "sanitize-html": "^2.13.0",
     "typescript": "^5.4.5"
   },
   "devDependencies": {
     "@marp-team/marp-cli": "^3.4.0",
-    "@types/sanitize-html": "^2.13.0",
     "husky": "^9.1.4",
     "prettier": "^3.3.3",
     "prettier-plugin-solidity": "^1.4.1",

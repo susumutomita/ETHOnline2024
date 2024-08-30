@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import sanitizeHtml from "sanitize-html";
 
 let chefProfile = {
   name: "John Doe",
@@ -18,12 +17,7 @@ export default async function handler(
     if (!name || !description || !specialty) {
       return res.status(400).json({ error: "All fields are required." });
     }
-    const sanitizedProfile = {
-      name: sanitizeHtml(name),
-      description: sanitizeHtml(description),
-      specialty: sanitizeHtml(specialty),
-    };
-    chefProfile = sanitizedProfile;
+    chefProfile = { name, description, specialty };
     res.status(200).json({ message: "Profile updated successfully" });
   } else {
     res.setHeader("Allow", ["GET", "POST"]);
