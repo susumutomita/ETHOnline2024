@@ -63,9 +63,9 @@ export default function ChefProfilePage() {
     } catch (error: any) {
       console.error("Error submitting profile:", error);
       if (error.code === 4001) {
-        setError("MetaMask access denied");
+        setError("MetaMask access denied. Please grant access to proceed.");
       } else {
-        setError("Failed to submit profile");
+        setError("Failed to submit profile. Please try again.");
       }
     } finally {
       setSubmitting(false);
