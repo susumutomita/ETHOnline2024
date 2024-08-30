@@ -43,7 +43,7 @@ export default function ChefProfilePage() {
           selectedAddress = contractAddresses.bnbTestnet;
           break;
         default:
-          setError("Unsupported network");
+          setError("Unsupported network. Please switch to Scroll Testnet or BNB Testnet.");
           setSubmitting(false);
           return;
       }
