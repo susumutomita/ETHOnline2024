@@ -1,12 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-
-let chefProfile = {
-  name: "John Doe",
-  description: "Expert in Italian cuisine",
-  specialty: "Pasta",
-};
-
-import { NextApiRequest, NextApiResponse } from "next";
 import sanitizeHtml from "sanitize-html";
 
 let chefProfile = {
@@ -37,5 +29,4 @@ export default async function handler(
     res.setHeader("Allow", ["GET", "POST"]);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
-}
 }
