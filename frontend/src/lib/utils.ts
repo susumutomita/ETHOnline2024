@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const timeAgo = (timestamp: Date, timeOnly?: boolean): string => {
-  if (!timestamp) return "never";
+  if (!timestamp || isNaN(new Date(timestamp).getTime())) return "never";
   return `${ms(Date.now() - new Date(timestamp).getTime())}${
     timeOnly ? "" : " ago"
   }`;
