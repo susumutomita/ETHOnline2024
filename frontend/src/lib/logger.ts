@@ -6,9 +6,17 @@ const logger = winston.createLogger({
     winston.format.colorize(),
     winston.format.splat(),
     winston.format.timestamp(),
+    const safeStringify = (obj) => {
+      try {
+        return JSON.stringify(obj, null, 2);
+      } catch (error) {
+        return 'Error in metadata serialization';
+      }
+    };
+
     winston.format.printf(({ timestamp, level, message, ...meta }) => {
       const metaString = Object.keys(meta).length
-        ? JSON.stringify(meta, null, 2)
+        ? safeStringify(meta)
         : "";
       return `${timestamp} [${level}]: ${message} ${metaString}`;
     }),
