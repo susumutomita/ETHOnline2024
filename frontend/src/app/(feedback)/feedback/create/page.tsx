@@ -42,28 +42,26 @@ export default function FeedbackFormPage() {
         setIsLoading={setIsLoading}
       />
       <div className="mt-6">
-        <h2 className="text-lg font-bold">Generated Questions:</h2>
-        {isLoading ? (
-          <p role="status" aria-live="polite">
-            Generating...
-          </p>
-        ) : error ? (
+        {error ? (
           <p role="alert" className="text-red-500">
             {error}
           </p>
         ) : questions.length > 0 ? (
-          <ul className="mt-4">
-            {questions.map((question) => (
-              <li
-                key={question.id}
-                className="mb-2 p-4 border rounded w-full text-left bg-white shadow-sm"
-              >
-                {question.text}
-              </li>
-            ))}
-          </ul>
+          <>
+            <h2 className="text-lg font-bold">Generated Questions:</h2>
+            <ul className="mt-4">
+              {questions.map((question) => (
+                <li
+                  key={question.id}
+                  className="mb-2 p-4 border rounded w-full text-left bg-white shadow-sm"
+                >
+                  {question.text}
+                </li>
+              ))}
+            </ul>
+          </>
         ) : (
-          <p>No questions generated yet.</p>
+          !isLoading && <p>No questions generated yet.</p> // Show only if not loading and no questions
         )}
       </div>
     </div>
