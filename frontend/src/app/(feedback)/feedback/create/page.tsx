@@ -1,111 +1,71 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { ethers } from "ethers";
-import Link from "next/link";
-import { abi, contractAddresses } from "../../../constants/contract";
+import React, { useState } from "react";
+import FeedbackForm from "@/components/FeedbackForm";
 
-interface FeedbackForm {
-  id: number;
-  title: string;
-  created: string;
-  feedbackCount: number;
+interface Question {
+  id: string;
+  text: string;
 }
 
-export default function FeedbackFormList() {
-  const [forms, setForms] = useState<FeedbackForm[]>([]);
-  const [loading, setLoading] = useState(false);
+export default function FeedbackFormPage() {
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [contractAddress, setContractAddress] = useState<string>("");
 
-  useEffect(() => {
-    const fetchFeedbackForms = async () => {
-      setLoading(true);
-      setError(null);
-
-      if (!window.ethereum) {
-        setError("MetaMask is not installed!");
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const network = await provider.getNetwork();
-
-        let selectedAddress = "";
-        switch (network.chainId) {
-          case BigInt(534351):
-            selectedAddress = contractAddresses.scrollTestnet;
-            break;
-          case BigInt(97):
-            selectedAddress = contractAddresses.bnbTestnet;
-            break;
-          default:
-            setError("Unsupported network");
-            setLoading(false);
-            return;
-        }
-
-        setContractAddress(selectedAddress);
-        const contract = new ethers.Contract(selectedAddress, abi, signer);
-
-        // フィードバックフォームのデータを取得
-        const formIds = await contract.getFormIds();
-        const formsData = await Promise.all(
-          formIds.map(async (formId: number) => {
-            const form = await contract.getForm(formId);
-            return {
-              id: formId,
-              title: form.title,
-              created: new Date(form.created * 1000).toLocaleDateString(),
-              feedbackCount: form.feedbackCount.toNumber(),
-            };
-          }),
-        );
-
-        setForms(formsData);
-      } catch (error: any) {
-        console.error("Error fetching data:", error);
-        setError(`Failed to fetch data: ${error.message || error}`);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFeedbackForms();
-  }, []);
+  const handleQuestionsGenerated = (generatedQuestions: string[]) => {
+    setIsLoading(true); // Set loading to true at the start of the operation
+    if (Array.isArray(generatedQuestions)) {
+      const formattedQuestions = generatedQuestions.map((q, index) => ({
+        id: `question-${index}`,
+        text: q,
+      }));
+      setQuestions(formattedQuestions);
+      setError(null); // Reset error state
+    } else {
+      console.error(
+        "Generated questions are not in the expected array format:",
+        generatedQuestions,
+      );
+      setError(
+        "An error occurred while generating questions. Please try again.",
+      );
+    }
+    setIsLoading(false); // Set loading to false after operation
+  };
 
   return (
     <div className="z-10 w-full max-w-xl px-5 xl:px-0 text-center">
-      {error && <p className="text-red-600 mb-4">{error}</p>}
-      {loading ? (
-        <p className="text-center text-white">Loading...</p>
-      ) : (
-        <div>
-          <h1 className="text-2xl font-bold mb-4">Your Feedback Forms</h1>
-          <div className="grid grid-cols-3 gap-4">
-            {forms.map((form) => (
-              <div key={form.id} className="p-4 border rounded-lg shadow-md">
-                <h2 className="text-xl font-semibold">{form.title}</h2>
-                <p>Created: {form.created}</p>
-                <p>Feedback count: {form.feedbackCount}</p>
-                <Link href={`/form/${form.id}`}>
-                  <button className="bg-green-500 text-white px-2 py-1 mt-2 rounded">
-                    Details
-                  </button>
-                </Link>
-              </div>
+      <h1 className="text-2xl font-bold mb-6">Create Feedback Form</h1>
+      <FeedbackForm
+        onQuestionsGenerated={handleQuestionsGenerated}
+        setIsLoading={setIsLoading}
+      />
+      <div className="mt-6">
+        <h2 className="text-lg font-bold">Generated Questions:</h2>
+        {isLoading ? (
+          <p role="status" aria-live="polite">
+            Generating...
+          </p>
+        ) : error ? (
+          <p role="alert" className="text-red-500">
+            {error}
+          </p>
+        ) : questions.length > 0 ? (
+          <ul className="mt-4">
+            {questions.map((question) => (
+              <li
+                key={question.id}
+                className="mb-2 p-4 border rounded w-full text-left bg-white shadow-sm"
+              >
+                {question.text}
+              </li>
             ))}
-            <Link href="/form/create">
-              <div className="p-4 border rounded-lg shadow-md flex items-center justify-center cursor-pointer">
-                <span className="text-4xl">+</span>
-              </div>
-            </Link>
-          </div>
-        </div>
-      )}
+          </ul>
+        ) : (
+          <p>No questions generated yet.</p>
+        )}
+      </div>
     </div>
   );
 }
