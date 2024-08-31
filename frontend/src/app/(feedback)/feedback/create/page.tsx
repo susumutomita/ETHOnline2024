@@ -8,6 +8,7 @@ export default function FeedbackFormPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleQuestionsGenerated = (generatedQuestions: string[]) => {
+    setIsLoading(true); // Set loading to true at the start of the operation
     if (Array.isArray(generatedQuestions)) {
       setQuestions(generatedQuestions);
     } else {
@@ -16,7 +17,7 @@ export default function FeedbackFormPage() {
         generatedQuestions,
       );
     }
-    setIsLoading(false);
+    setIsLoading(false); // Already present to set loading to false after operation
   };
 
   return (
