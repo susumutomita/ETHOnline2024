@@ -36,10 +36,10 @@ export default function FeedbackFormPage() {
   };
 
   return (
-    <div className="flex flex-row justify-center mt-8 space-x-8 z-10 w-full max-w-xl px-5 xl:px-0 text-center">
+    <div className="flex flex-row justify-center mt-8 space-x-8 z-10 w-full max-w-screen-xl px-5 xl:px-0 text-center">
       {/* Main Feedback Form Card */}
       <BasicCard
-        className="w-[600px] p-4"
+        className="w-full p-4"
         title="Create Feedback Form"
         description="Collect feedback from your customers and improve their experience by creating a tailored feedback form."
       >
@@ -69,9 +69,10 @@ export default function FeedbackFormPage() {
           ) : null}
         </div>
       </BasicCard>
+
       {/* Steps or Instructions Card */}
       <BasicCard
-        className="w-[300px] h-auto px-4 py-6 sticky top-24 text-center overflow-hidden"
+        className="w-full h-auto px-4 py-6 sticky top-24 text-center"
         title="Steps"
         description="Follow these steps to create and manage feedback forms."
       >
