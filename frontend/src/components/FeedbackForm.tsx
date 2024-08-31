@@ -14,9 +14,13 @@ export default function FeedbackForm({
   const [productName, setProductName] = useState("");
   const [category, setCategory] = useState("food");
   const [feedbackType, setFeedbackType] = useState("general");
+  const [error, setError] = useState<string | null>(null);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const generateQuestions = async () => {
     setIsLoading(true); // ローディング状態を設定
+    setIsDisabled(true); // フォーム要素を無効にする
+    setError(null); // エラー状態をリセット
     try {
       const response = await fetch("/api/generate-questions", {
         method: "POST",
@@ -35,8 +39,10 @@ export default function FeedbackForm({
       onQuestionsGenerated(questions);
     } catch (error) {
       console.error("Error generating questions:", error);
+      setError("An error occurred while generating questions. Please try again.");
     } finally {
       setIsLoading(false); // ローディング状態を終了
+      setIsDisabled(false); // フォーム要素を有効にする
     }
   };
 
@@ -49,6 +55,7 @@ export default function FeedbackForm({
           onChange={(e) => setProductName(e.target.value)}
           placeholder="Product Name"
           className="p-2 border rounded"
+          disabled={isDisabled} // ローディング中は無効
         />
       </div>
       <div className="mb-4">
@@ -56,6 +63,7 @@ export default function FeedbackForm({
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           className="p-2 border rounded"
+          disabled={isDisabled} // ローディング中は無効
         >
           <option value="food">Food</option>
           <option value="beverage">Beverage</option>
@@ -68,6 +76,7 @@ export default function FeedbackForm({
           value={feedbackType}
           onChange={(e) => setFeedbackType(e.target.value)}
           className="p-2 border rounded"
+          disabled={isDisabled} // ローディング中は無効
         >
           <option value="general">General Feedback</option>
           <option value="quality">Quality Feedback</option>
@@ -78,9 +87,11 @@ export default function FeedbackForm({
       <button
         onClick={generateQuestions}
         className="bg-blue-500 text-white p-2 rounded"
+        disabled={isDisabled} // ローディング中は無効
       >
-        Generate Questions
+        {isDisabled ? "Generating..." : "Generate Questions"}
       </button>
+      {error && <p className="text-red-500 mt-4">{error}</p>}
     </div>
   );
 }
