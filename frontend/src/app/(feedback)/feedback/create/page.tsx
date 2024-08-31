@@ -71,24 +71,28 @@ export default function FeedbackFormPage() {
       </BasicCard>
       {/* Steps or Instructions Card */}
       <BasicCard
-        className="w-[300px] h-[600px] px-2 py-6 sticky top-24"
+        className="w-[300px] h-auto px-4 py-6 sticky top-24 text-center overflow-hidden"
         title="Steps"
         description="Follow these steps to create and manage feedback forms."
       >
         <div className="space-y-4">
           <div className="mb-4">
             <h3 className="text-lg font-bold">1. Create Form</h3>
-            <p>Enter product details and select feedback types.</p>
+            <p className="break-words">
+              Enter product details and select feedback types.
+            </p>
           </div>
           <div className="mb-4">
             <h3 className="text-lg font-bold">2. Generate Questions</h3>
-            <p>
+            <p className="break-words">
               Click &apos;Generate Questions&apos; to create your feedback form.
             </p>
           </div>
           <div className="mb-4">
             <h3 className="text-lg font-bold">3. Review and Publish</h3>
-            <p>Review generated questions and publish the form.</p>
+            <p className="break-words">
+              Review generated questions and publish the form.
+            </p>
           </div>
         </div>
       </BasicCard>
