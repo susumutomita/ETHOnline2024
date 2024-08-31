@@ -10,18 +10,12 @@ interface Question {
 }
 
 export default function FeedbackFormPage() {
-  const [questions, setQuestions] = useState<Question[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleQuestionsGenerated = (generatedQuestions: string[]) => {
+  const handleQuestionsGenerated = (generatedQuestions: Question[]) => {
     setIsLoading(true);
     if (Array.isArray(generatedQuestions)) {
-      const formattedQuestions = generatedQuestions.map((q, index) => ({
-        id: `question-${index}`,
-        text: q,
-      }));
-      setQuestions(formattedQuestions);
       setError(null); // Reset error state
     } else {
       console.error(
@@ -47,27 +41,13 @@ export default function FeedbackFormPage() {
           setIsLoading={setIsLoading}
           isLoading={isLoading} // isLoadingをFeedbackFormに渡す
         />
-        <div className="mt-6">
-          {error ? (
+        {error && (
+          <div className="mt-6">
             <p role="alert" className="text-red-500">
               {error}
             </p>
-          ) : questions.length > 0 ? (
-            <>
-              <h2 className="text-lg font-bold">Generated Questions:</h2>
-              <ul className="mt-4">
-                {questions.map((question) => (
-                  <li
-                    key={question.id}
-                    className="mb-2 p-4 border rounded w-full text-left bg-white shadow-sm"
-                  >
-                    {question.text}
-                  </li>
-                ))}
-              </ul>
-            </>
-          ) : null}
-        </div>
+          </div>
+        )}
       </BasicCard>
 
       {/* Steps or Instructions Card */}

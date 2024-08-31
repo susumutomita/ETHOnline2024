@@ -1,12 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-
-interface FeedbackFormProps {
-  onQuestionsGenerated: (questions: string[]) => void;
-  setIsLoading: (loading: boolean) => void;
-  isLoading: boolean;
-}
+import { Question, FeedbackFormProps } from "@/components/FeedbackFormTypes";
 
 export default function FeedbackForm({
   onQuestionsGenerated,
@@ -16,6 +11,10 @@ export default function FeedbackForm({
   const [productName, setProductName] = useState("");
   const [category, setCategory] = useState("food");
   const [feedbackType, setFeedbackType] = useState("general");
+  const [tokenName, setTokenName] = useState("");
+  const [price, setPrice] = useState("");
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [ratings, setRatings] = useState<number[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const handleChange =
@@ -23,6 +22,12 @@ export default function FeedbackForm({
     (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       setter(event.target.value);
     };
+
+  const handleRatingChange = (index: number, rating: number) => {
+    const newRatings = [...ratings];
+    newRatings[index] = rating;
+    setRatings(newRatings);
+  };
 
   const generateQuestions = async () => {
     setIsLoading(true);
@@ -33,7 +38,13 @@ export default function FeedbackForm({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ productName, category, feedbackType }),
+        body: JSON.stringify({
+          productName,
+          category,
+          feedbackType,
+          tokenName,
+          price,
+        }),
       });
 
       if (!response.ok) {
@@ -41,47 +52,57 @@ export default function FeedbackForm({
       }
 
       const data = await response.json();
-      const questions = data.questions || [];
-      onQuestionsGenerated(questions);
+      console.log("API response data:", data);
+
+      const generatedQuestions: Question[] = data.questions
+        .filter((q: string) => /^\d+\./.test(q.trim()))
+        .map((q: string, index: number) => ({
+          id: `question-${index}`,
+          text: q.trim(),
+        }));
+
+      console.log("Filtered Questions:", generatedQuestions);
+      setQuestions(generatedQuestions);
+      setRatings(new Array(generatedQuestions.length).fill(0)); // 質問の数に合わせて評価を初期化
+      onQuestionsGenerated(generatedQuestions);
     } catch (error) {
       console.error("Error generating questions:", error);
       setError(
         "An error occurred while generating questions. Please try again.",
       );
+      setQuestions([]); // エラー時に質問をクリア
     } finally {
-      setIsLoading(false); // ローディング状態を終了
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="text-center">
-      <div className="mb-4">
+      {/* フィードバック生成セクション */}
+      <div className="mb-6">
+        <h2 className="text-xl font-bold mb-4">Feedback Form Details</h2>
         <input
           type="text"
           value={productName}
           onChange={handleChange(setProductName)}
           placeholder="Product Name"
-          className="p-2 border rounded w-full"
+          className="p-2 border rounded w-full mb-4"
           disabled={isLoading}
         />
-      </div>
-      <div className="mb-4">
         <select
           value={category}
           onChange={handleChange(setCategory)}
-          className="p-2 border rounded w-full"
+          className="p-2 border rounded w-full mb-4"
           disabled={isLoading}
         >
           <option value="food">Food</option>
           <option value="beverage">Beverage</option>
           <option value="electronics">Electronics</option>
         </select>
-      </div>
-      <div className="mb-4">
         <select
           value={feedbackType}
           onChange={handleChange(setFeedbackType)}
-          className="p-2 border rounded w-full"
+          className="p-2 border rounded w-full mb-4"
           disabled={isLoading}
         >
           <option value="general">General Feedback</option>
@@ -89,14 +110,70 @@ export default function FeedbackForm({
           <option value="usability">Usability Feedback</option>
         </select>
       </div>
+
+      {/* Generate Questions ボタン */}
       <button
         onClick={generateQuestions}
-        className={`bg-blue-500 text-white p-2 rounded w-full ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+        className={`bg-blue-500 text-white p-2 rounded w-full mb-4 ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
         disabled={isLoading}
       >
         {isLoading ? "Generating..." : "Generate Questions"}
       </button>
+
       {error && <p className="text-red-500 mt-4">{error}</p>}
+
+      {/* 質問の表示・評価セクション */}
+      {questions.length > 0 && (
+        <div className="mt-6">
+          <h2 className="text-lg font-bold">Generated Questions:</h2>
+          <ul className="mt-4">
+            {questions.map((question, index) => (
+              <li
+                key={question.id || index}
+                className="mb-2 p-4 border rounded w-full text-left bg-white shadow-sm"
+              >
+                <p>{question.text}</p>
+                <div className="mt-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <span
+                      key={star}
+                      className={`cursor-pointer ${
+                        ratings[index] >= star
+                          ? "text-yellow-500"
+                          : "text-gray-400"
+                      }`}
+                      onClick={() => handleRatingChange(index, star)}
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* トークン情報セクション */}
+      <div className="mt-6">
+        <h2 className="text-xl font-bold mb-4">Token Details</h2>
+        <input
+          type="text"
+          value={tokenName}
+          onChange={handleChange(setTokenName)}
+          placeholder="Token Name"
+          className="p-2 border rounded w-full mb-4"
+          disabled={isLoading}
+        />
+        <input
+          type="number"
+          value={price}
+          onChange={handleChange(setPrice)}
+          placeholder="Price in ETH"
+          className="p-2 border rounded w-full mb-4"
+          disabled={isLoading}
+        />
+      </div>
     </div>
   );
 }
