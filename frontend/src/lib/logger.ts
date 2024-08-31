@@ -6,8 +6,11 @@ const logger = winston.createLogger({
     winston.format.colorize(),
     winston.format.splat(),
     winston.format.timestamp(),
-    winston.format.printf(({ timestamp, level, message }) => {
-      return `${timestamp} [${level}]: ${message}`;
+    winston.format.printf(({ timestamp, level, message, ...meta }) => {
+      const metaString = Object.keys(meta).length
+        ? JSON.stringify(meta, null, 2)
+        : "";
+      return `${timestamp} [${level}]: ${message} ${metaString}`;
     }),
   ),
   transports: [

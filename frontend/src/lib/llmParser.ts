@@ -2,10 +2,7 @@ import ollama from "ollama";
 import logger from "@/lib/logger";
 import Groq from "groq-sdk";
 
-export async function parseHtmlWithLLM(
-  idea: string,
-  prompt: string,
-): Promise<string> {
+export async function parseHtmlWithLLM(prompt: string): Promise<string> {
   logger.info("Parsing idea with LLM...");
 
   const isProduction = process.env.NEXT_PUBLIC_ENVIRONMENT === "production";
@@ -24,7 +21,10 @@ export async function parseHtmlWithLLM(
           },
         ],
       });
-      logger.info("Local LLM response received:", { response });
+      logger.info(
+        "Local LLM response received: %s",
+        JSON.stringify(response, null, 2),
+      );
       return response.message.content.trim();
     } else {
       logger.info("Using cloud-based LLM (Groq) for idea parsing.");
