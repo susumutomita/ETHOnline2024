@@ -1,5 +1,3 @@
-// src/util/site-config.ts
-
 export const config = {
   title: "BlockFeedback",
   description:
