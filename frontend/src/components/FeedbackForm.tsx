@@ -5,17 +5,17 @@ import React, { useState } from "react";
 interface FeedbackFormProps {
   onQuestionsGenerated: (questions: string[]) => void;
   setIsLoading: (loading: boolean) => void;
+  isLoading: boolean;
 }
 
 export default function FeedbackForm({
   onQuestionsGenerated,
   setIsLoading,
+  isLoading,
 }: FeedbackFormProps) {
   const [productName, setProductName] = useState("");
   const [category, setCategory] = useState("food");
   const [feedbackType, setFeedbackType] = useState("general");
-  const [isLoading, setIsLoadingState] = useState(false); // isLoadingというローカル状態を使う
-
   const [error, setError] = useState<string | null>(null);
 
   const handleChange =
@@ -25,8 +25,8 @@ export default function FeedbackForm({
     };
 
   const generateQuestions = async () => {
-    setIsLoadingState(true); // ローディング状態を設定
-    setError(null); // エラー状態をリセット
+    setIsLoading(true);
+    setError(null);
     try {
       const response = await fetch("/api/generate-questions", {
         method: "POST",
@@ -49,7 +49,7 @@ export default function FeedbackForm({
         "An error occurred while generating questions. Please try again.",
       );
     } finally {
-      setIsLoadingState(false); // ローディング状態を終了
+      setIsLoading(false); // ローディング状態を終了
     }
   };
 
@@ -62,7 +62,7 @@ export default function FeedbackForm({
           onChange={handleChange(setProductName)}
           placeholder="Product Name"
           className="p-2 border rounded w-full"
-          disabled={isLoading} // isLoading状態を使用
+          disabled={isLoading}
         />
       </div>
       <div className="mb-4">
@@ -70,7 +70,7 @@ export default function FeedbackForm({
           value={category}
           onChange={handleChange(setCategory)}
           className="p-2 border rounded w-full"
-          disabled={isLoading} // isLoading状態を使用
+          disabled={isLoading}
         >
           <option value="food">Food</option>
           <option value="beverage">Beverage</option>
@@ -82,7 +82,7 @@ export default function FeedbackForm({
           value={feedbackType}
           onChange={handleChange(setFeedbackType)}
           className="p-2 border rounded w-full"
-          disabled={isLoading} // isLoading状態を使用
+          disabled={isLoading}
         >
           <option value="general">General Feedback</option>
           <option value="quality">Quality Feedback</option>
@@ -92,7 +92,7 @@ export default function FeedbackForm({
       <button
         onClick={generateQuestions}
         className={`bg-blue-500 text-white p-2 rounded w-full ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
-        disabled={isLoading} // isLoading状態を使用
+        disabled={isLoading}
       >
         {isLoading ? "Generating..." : "Generate Questions"}
       </button>

@@ -15,7 +15,7 @@ export default function FeedbackFormPage() {
   const [error, setError] = useState<string | null>(null);
 
   const handleQuestionsGenerated = (generatedQuestions: string[]) => {
-    setIsLoading(true); // Set loading to true at the start of the operation
+    setIsLoading(true);
     if (Array.isArray(generatedQuestions)) {
       const formattedQuestions = generatedQuestions.map((q, index) => ({
         id: `question-${index}`,
@@ -37,7 +37,6 @@ export default function FeedbackFormPage() {
 
   return (
     <div className="flex flex-row justify-center mt-8 space-x-8 z-10 w-full max-w-screen-xl px-5 xl:px-0 text-center">
-      {/* Main Feedback Form Card */}
       <BasicCard
         className="w-full p-4"
         title="Create Feedback Form"
@@ -46,6 +45,7 @@ export default function FeedbackFormPage() {
         <FeedbackForm
           onQuestionsGenerated={handleQuestionsGenerated}
           setIsLoading={setIsLoading}
+          isLoading={isLoading} // isLoadingをFeedbackFormに渡す
         />
         <div className="mt-6">
           {error ? (
