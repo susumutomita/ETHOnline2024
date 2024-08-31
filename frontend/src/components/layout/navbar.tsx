@@ -28,7 +28,26 @@ export default function NavBar() {
             />
             <p>BlockFeedback</p>
           </Link>
-          <div className="flex items-center space-x-4">
+          <nav className="flex items-center space-x-4 ml-10">
+            <Link
+              href="/feedback/create"
+              className="text-gray-500 hover:underline"
+            >
+              Create Feedback Form
+            </Link>
+            <span className="text-gray-300">|</span>
+            <Link
+              href="/feedback/results"
+              className="text-gray-500 hover:underline"
+            >
+              View Feedback Results
+            </Link>
+            <span className="text-gray-300">|</span>
+            <Link href="/about" className="text-gray-500 hover:underline">
+              About
+            </Link>
+          </nav>
+          <div className="flex items-center space-x-4 ml-auto">
             <ConnectKitButton />
           </div>
         </div>
