@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import FeedbackForm from "@/components/FeedbackForm";
+import FeedbackForm from "@/components/FeedbackForm/FeedbackForm";
 import BasicCard from "@/components/basic-card";
 
 interface Question {
