@@ -39,7 +39,9 @@ export default function FeedbackForm({
       onQuestionsGenerated(questions);
     } catch (error) {
       console.error("Error generating questions:", error);
-      setError("An error occurred while generating questions. Please try again.");
+      setError(
+        "An error occurred while generating questions. Please try again.",
+      );
     } finally {
       setIsLoading(false); // ローディング状態を終了
       setIsDisabled(false); // フォーム要素を有効にする

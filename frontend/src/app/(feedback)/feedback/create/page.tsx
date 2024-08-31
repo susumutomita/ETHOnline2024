@@ -3,21 +3,35 @@
 import React, { useState } from "react";
 import FeedbackForm from "@/components/FeedbackForm";
 
+interface Question {
+  id: string;
+  text: string;
+}
+
 export default function FeedbackFormPage() {
-  const [questions, setQuestions] = useState<string[]>([]);
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleQuestionsGenerated = (generatedQuestions: string[]) => {
     setIsLoading(true); // Set loading to true at the start of the operation
     if (Array.isArray(generatedQuestions)) {
-      setQuestions(generatedQuestions);
+      const formattedQuestions = generatedQuestions.map((q, index) => ({
+        id: `question-${index}`,
+        text: q,
+      }));
+      setQuestions(formattedQuestions);
+      setError(null); // Reset error state
     } else {
       console.error(
         "Generated questions are not in the expected array format:",
         generatedQuestions,
       );
+      setError(
+        "An error occurred while generating questions. Please try again.",
+      );
     }
-    setIsLoading(false); // Already present to set loading to false after operation
+    setIsLoading(false); // Set loading to false after operation
   };
 
   return (
@@ -30,15 +44,21 @@ export default function FeedbackFormPage() {
       <div className="mt-6">
         <h2 className="text-lg font-bold">Generated Questions:</h2>
         {isLoading ? (
-          <p>Generating...</p>
+          <p role="status" aria-live="polite">
+            Generating...
+          </p>
+        ) : error ? (
+          <p role="alert" className="text-red-500">
+            {error}
+          </p>
         ) : questions.length > 0 ? (
           <ul className="mt-4">
-            {questions.map((question, index) => (
+            {questions.map((question) => (
               <li
-                key={index}
+                key={question.id}
                 className="mb-2 p-4 border rounded w-full text-left bg-white shadow-sm"
               >
-                {question}
+                {question.text}
               </li>
             ))}
           </ul>
