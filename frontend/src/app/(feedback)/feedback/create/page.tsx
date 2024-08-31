@@ -47,8 +47,28 @@ export default function FeedbackFormPage() {
           onQuestionsGenerated={handleQuestionsGenerated}
           setIsLoading={setIsLoading}
         />
+        <div className="mt-6">
+          {error ? (
+            <p role="alert" className="text-red-500">
+              {error}
+            </p>
+          ) : questions.length > 0 ? (
+            <>
+              <h2 className="text-lg font-bold">Generated Questions:</h2>
+              <ul className="mt-4">
+                {questions.map((question) => (
+                  <li
+                    key={question.id}
+                    className="mb-2 p-4 border rounded w-full text-left bg-white shadow-sm"
+                  >
+                    {question.text}
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+        </div>
       </BasicCard>
-
       {/* Steps or Instructions Card */}
       <BasicCard
         className="w-[300px] h-[600px] px-2 py-6 sticky top-24"
