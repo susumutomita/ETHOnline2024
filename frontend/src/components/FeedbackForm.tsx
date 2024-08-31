@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation"; // useRouterをインポート
 import { Question, FeedbackFormProps } from "@/components/FeedbackFormTypes";
 
 export default function FeedbackForm({
@@ -8,6 +9,7 @@ export default function FeedbackForm({
   setIsLoading,
   isLoading,
 }: FeedbackFormProps) {
+  const router = useRouter(); // useRouterフックを使用
   const [productName, setProductName] = useState("");
   const [category, setCategory] = useState("food");
   const [feedbackType, setFeedbackType] = useState("general");
@@ -74,6 +76,10 @@ export default function FeedbackForm({
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const navigateToSmartContractPage = () => {
+    router.push("/create-smart-contract"); // スマートコントラクト作成ページに移動
   };
 
   return (
@@ -174,6 +180,15 @@ export default function FeedbackForm({
           disabled={isLoading}
         />
       </div>
+
+      {/* Continue ボタン */}
+      <button
+        onClick={navigateToSmartContractPage}
+        className={`bg-blue-500 text-white p-2 rounded w-full mt-6 ${questions.length === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+        disabled={questions.length === 0}
+      >
+        Continue to Smart Contract Creation
+      </button>
     </div>
   );
 }
