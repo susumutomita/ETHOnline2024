@@ -6,6 +6,7 @@ export default function TokenDetailsForm({
   setTokenName,
   price,
   setPrice,
+  readonly = false,
 }: TokenDetailsFormProps) {
   return (
     <div className="mb-6">
@@ -13,16 +14,18 @@ export default function TokenDetailsForm({
       <input
         type="text"
         value={tokenName}
-        onChange={(e) => setTokenName(e.target.value)}
+        onChange={(e) => setTokenName && setTokenName(e.target.value)}
         placeholder="Token Name"
         className="p-2 border rounded w-full mb-4"
+        disabled={readonly}
       />
       <input
         type="number"
         value={price}
-        onChange={(e) => setPrice(e.target.value)}
+        onChange={(e) => setPrice && setPrice(e.target.value)}
         placeholder="Price in ETH"
         className="p-2 border rounded w-full mb-4"
+        disabled={readonly}
       />
     </div>
   );

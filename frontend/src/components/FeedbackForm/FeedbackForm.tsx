@@ -23,8 +23,8 @@ export default function FeedbackForm({
 
   const router = useRouter();
 
-  const navigateToSmartContractPage = () => {
-    router.push("/smart-contract-creation");
+  const navigateToPreviewPage = () => {
+    router.push("/feedback/preview");
   };
 
   const handleChange =
@@ -62,8 +62,6 @@ export default function FeedbackForm({
       }
 
       const data = await response.json();
-      console.log("API response data:", data);
-
       const generatedQuestions: Question[] = data.questions
         .filter((q: string) => /^\d+\./.test(q.trim()))
         .map((q: string, index: number) => ({
@@ -71,14 +69,14 @@ export default function FeedbackForm({
           text: q.trim(),
         }));
 
-      console.log("Filtered Questions:", generatedQuestions);
       setQuestions(generatedQuestions);
       setRatings(new Array(generatedQuestions.length).fill(0));
       onQuestionsGenerated(generatedQuestions);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating questions:", error);
       setError(
-        "An error occurred while generating questions. Please try again.",
+        error.message ||
+          "An error occurred while generating questions. Please try again.",
       );
       setQuestions([]);
     } finally {
@@ -115,11 +113,11 @@ export default function FeedbackForm({
       />
 
       <button
-        onClick={() => navigateToSmartContractPage()}
+        onClick={navigateToPreviewPage}
         className={`bg-green-500 text-white p-2 rounded w-full mt-6 ${questions.length === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
         disabled={questions.length === 0}
       >
-        Continue to Smart Contract Creation
+        Continue to Preview
       </button>
     </div>
   );
