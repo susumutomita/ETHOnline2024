@@ -5,6 +5,7 @@ export default function QuestionList({
   questions,
   ratings,
   setRatings,
+  readonly = false,
 }: QuestionListProps) {
   const handleRatingChange = (index: number, rating: number) => {
     const newRatings = [...ratings];
@@ -20,12 +21,26 @@ export default function QuestionList({
             key={question.id}
             className="mb-2 p-4 border rounded w-full text-left bg-white shadow-sm"
           >
-            <p>{question.text}</p>
+            <input
+              type="text"
+              value={question.text}
+              onChange={(e) => {
+                if (!readonly) {
+                  const newQuestions = [...questions];
+                  newQuestions[index].text = e.target.value;
+                  setRatings(new Array(newQuestions.length).fill(0));
+                }
+              }}
+              className="w-full p-2 border rounded"
+              readOnly={readonly}
+            />
             <div className="mt-2">
               {[1, 2, 3, 4, 5].map((star) => (
                 <span
                   key={star}
-                  className={`cursor-pointer ${ratings[index] >= star ? "text-yellow-500" : "text-gray-400"}`}
+                  className={`cursor-pointer ${
+                    ratings[index] >= star ? "text-yellow-500" : "text-gray-400"
+                  }`}
                   onClick={() => handleRatingChange(index, star)}
                 >
                   ★

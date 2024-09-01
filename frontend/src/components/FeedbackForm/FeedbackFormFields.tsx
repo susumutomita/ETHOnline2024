@@ -10,6 +10,7 @@ export default function FeedbackFormFields({
   setFeedbackType,
   generateQuestions,
   isLoading,
+  readonly = false,
 }: FeedbackFormFieldsProps) {
   return (
     <div className="mb-6">
@@ -17,16 +18,16 @@ export default function FeedbackFormFields({
       <input
         type="text"
         value={productName}
-        onChange={(e) => setProductName(e.target.value)}
+        onChange={(e) => setProductName && setProductName(e.target.value)}
         placeholder="Product Name"
         className="p-2 border rounded w-full mb-4"
-        disabled={isLoading}
+        disabled={isLoading || readonly}
       />
       <select
         value={category}
-        onChange={(e) => setCategory(e.target.value)}
+        onChange={(e) => setCategory && setCategory(e.target.value)}
         className="p-2 border rounded w-full mb-4"
-        disabled={isLoading}
+        disabled={isLoading || readonly}
       >
         <option value="food">Food</option>
         <option value="beverage">Beverage</option>
@@ -34,21 +35,23 @@ export default function FeedbackFormFields({
       </select>
       <select
         value={feedbackType}
-        onChange={(e) => setFeedbackType(e.target.value)}
+        onChange={(e) => setFeedbackType && setFeedbackType(e.target.value)}
         className="p-2 border rounded w-full mb-4"
-        disabled={isLoading}
+        disabled={isLoading || readonly}
       >
         <option value="general">General Feedback</option>
         <option value="quality">Quality Feedback</option>
         <option value="usability">Usability Feedback</option>
       </select>
-      <button
-        onClick={generateQuestions}
-        className={`bg-blue-500 text-white p-2 rounded w-full mb-4 ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
-        disabled={isLoading}
-      >
-        {isLoading ? "Generating..." : "Generate Questions"}
-      </button>
+      {!readonly && (
+        <button
+          onClick={generateQuestions}
+          className={`bg-blue-500 text-white p-2 rounded w-full mb-4 ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+          disabled={isLoading}
+        >
+          {isLoading ? "Generating..." : "Generate Questions"}
+        </button>
+      )}
     </div>
   );
 }
