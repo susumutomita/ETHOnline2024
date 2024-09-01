@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import TokenDetailsForm from "@/components/FeedbackForm/TokenDetailsForm";
 import QuestionList from "@/components/FeedbackForm/QuestionList";
 import { useFeedbackContext } from "@/components/FeedbackForm/FeedbackContext";
@@ -14,6 +15,8 @@ export default function PreviewPage() {
     questions,
     ratings,
   } = useFeedbackContext();
+
+  const router = useRouter();
 
   const handleDeploy = async () => {
     try {
@@ -72,12 +75,21 @@ export default function PreviewPage() {
           throw new Error("Function not implemented.");
         }}
       />
-      <button
-        onClick={handleDeploy}
-        className="bg-green-500 text-white p-2 rounded w-full mt-6"
-      >
-        Confirm and Continue to Deployment
-      </button>
+      <div className="flex justify-center space-x-4">
+        <button
+          onClick={handleDeploy}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4"
+        >
+          Confirm and Continue to Deployment
+        </button>
+        <button
+          type="button"
+          onClick={() => router.push("/feedback/create")}
+          className="bg-gray-500 text-white px-4 py-2 rounded-md mt-4"
+        >
+          Back
+        </button>
+      </div>
     </div>
   );
 }

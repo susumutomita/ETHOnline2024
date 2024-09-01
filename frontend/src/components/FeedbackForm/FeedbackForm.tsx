@@ -66,12 +66,12 @@ export default function FeedbackForm({
       }
 
       const data = await response.json();
-      const generatedQuestions: Question[] = data.questions.map(
-        (q: string, index: number) => ({
+      const generatedQuestions: Question[] = data.questions
+        .filter((q: string) => /^\d+\./.test(q.trim()))
+        .map((q: string, index: number) => ({
           id: `question-${index}`,
           text: q.trim(),
-        }),
-      );
+        }));
 
       setQuestions(generatedQuestions);
       setRatings(new Array(generatedQuestions.length).fill(0));
