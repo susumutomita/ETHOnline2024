@@ -1,42 +1,46 @@
 "use client";
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Question, FeedbackFormProps } from "@/components/types";
+import { useFeedbackContext } from "@/components/FeedbackForm/FeedbackContext";
 import FeedbackFormFields from "@/components/FeedbackForm/FeedbackFormFields";
 import TokenDetailsForm from "@/components/FeedbackForm/TokenDetailsForm";
 import QuestionList from "@/components/FeedbackForm/QuestionList";
+import { Question } from "@/components/types";
+
+interface FeedbackFormProps {
+  onQuestionsGenerated: (questions: string[]) => void;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading: boolean;
+}
 
 export default function FeedbackForm({
   onQuestionsGenerated,
   setIsLoading,
   isLoading,
 }: FeedbackFormProps) {
-  const [productName, setProductName] = useState("");
-  const [category, setCategory] = useState("food");
-  const [feedbackType, setFeedbackType] = useState("general");
-  const [tokenName, setTokenName] = useState("");
-  const [price, setPrice] = useState("");
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [ratings, setRatings] = useState<number[]>([]);
+  const {
+    productName,
+    setProductName,
+    category,
+    setCategory,
+    feedbackType,
+    setFeedbackType,
+    tokenName,
+    setTokenName,
+    price,
+    setPrice,
+    questions,
+    setQuestions,
+    ratings,
+    setRatings,
+  } = useFeedbackContext();
+
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
 
   const navigateToPreviewPage = () => {
     router.push("/feedback/preview");
-  };
-
-  const handleChange =
-    (setter: React.Dispatch<React.SetStateAction<string>>) =>
-    (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      setter(event.target.value);
-    };
-
-  const handleRatingChange = (index: number, rating: number) => {
-    const newRatings = [...ratings];
-    newRatings[index] = rating;
-    setRatings(newRatings);
   };
 
   const generateQuestions = async () => {
@@ -62,16 +66,15 @@ export default function FeedbackForm({
       }
 
       const data = await response.json();
-      const generatedQuestions: Question[] = data.questions
-        .filter((q: string) => /^\d+\./.test(q.trim()))
-        .map((q: string, index: number) => ({
+      const generatedQuestions: Question[] = data.questions.map(
+        (q: string, index: number) => ({
           id: `question-${index}`,
           text: q.trim(),
-        }));
+        }),
+      );
 
       setQuestions(generatedQuestions);
       setRatings(new Array(generatedQuestions.length).fill(0));
-      onQuestionsGenerated(generatedQuestions);
     } catch (error: any) {
       console.error("Error generating questions:", error);
       setError(
@@ -83,6 +86,12 @@ export default function FeedbackForm({
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log("Questions set:", questions);
+    console.log("Token Name set:", tokenName);
+    console.log("Price set:", price);
+  }, [questions, tokenName, price]);
 
   return (
     <div className="text-center">
