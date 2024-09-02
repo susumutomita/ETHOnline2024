@@ -23,6 +23,9 @@ export const FeedbackProvider: React.FC<FeedbackProviderProps> = ({
   const [price, setPrice] = useState("");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [ratings, setRatings] = useState<number[]>([]);
+  const [tokenContractAddress, setTokenContractAddress] = useState<
+    string | null
+  >(null);
 
   return (
     <FeedbackContext.Provider
@@ -41,6 +44,8 @@ export const FeedbackProvider: React.FC<FeedbackProviderProps> = ({
         setQuestions,
         ratings,
         setRatings,
+        tokenContractAddress,
+        setTokenContractAddress,
       }}
     >
       {children}

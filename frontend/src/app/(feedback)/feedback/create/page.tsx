@@ -9,6 +9,9 @@ export default function FeedbackFormPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [tokenContractAddress, setTokenContractAddress] = useState<
+    string | null
+  >(null); // 新規追加
 
   const handleQuestionsGenerated = (generatedQuestions: string[]) => {
     setIsLoading(true);
@@ -28,7 +31,7 @@ export default function FeedbackFormPage() {
         "An error occurred while generating questions. Please try again.",
       );
     }
-    setIsLoading(false); // Set loading to false after operation
+    setIsLoading(false);
   };
 
   return (
@@ -41,7 +44,8 @@ export default function FeedbackFormPage() {
         <FeedbackForm
           onQuestionsGenerated={handleQuestionsGenerated}
           setIsLoading={setIsLoading}
-          isLoading={isLoading} // isLoadingをFeedbackFormに渡す
+          isLoading={isLoading}
+          setTokenContractAddress={setTokenContractAddress}
         />
         <div className="mt-6">
           {error ? (

@@ -5,13 +5,7 @@ import { useFeedbackContext } from "@/components/FeedbackForm/FeedbackContext";
 import FeedbackFormFields from "@/components/FeedbackForm/FeedbackFormFields";
 import TokenDetailsForm from "@/components/FeedbackForm/TokenDetailsForm";
 import QuestionList from "@/components/FeedbackForm/QuestionList";
-import { Question } from "@/components/types";
-
-interface FeedbackFormProps {
-  onQuestionsGenerated: (questions: string[]) => void;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  isLoading: boolean;
-}
+import { Question, FeedbackFormProps } from "@/components/types";
 
 export default function FeedbackForm({
   onQuestionsGenerated,

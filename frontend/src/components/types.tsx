@@ -1,14 +1,15 @@
-import { ReactNode } from "react";
+import { ReactNode, Dispatch, SetStateAction } from "react";
 export interface Question {
   id: string;
   text: string;
 }
 
 export interface FeedbackFormProps {
-  onQuestionsGenerated: (questions: Question[]) => void;
+  onQuestionsGenerated: (questions: string[]) => void;
   setIsLoading: (loading: boolean) => void;
   isLoading: boolean;
   readonly?: boolean;
+  setTokenContractAddress?: Dispatch<SetStateAction<string | null>>;
 }
 
 export interface QuestionListProps {
@@ -54,6 +55,8 @@ export interface FeedbackContextType {
   ratings: number[];
   setRatings: (ratings: number[]) => void;
   readonly?: boolean;
+  tokenContractAddress: string | null;
+  setTokenContractAddress: (address: string | null) => void;
 }
 
 export interface FeedbackProviderProps {
