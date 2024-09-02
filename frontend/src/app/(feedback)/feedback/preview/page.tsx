@@ -14,6 +14,7 @@ export default function PreviewPage() {
     price,
     questions,
     ratings,
+    tokenContractAddress,
   } = useFeedbackContext();
 
   const router = useRouter();
@@ -26,12 +27,8 @@ export default function PreviewPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          productName,
-          category,
-          feedbackType,
           tokenName,
           price,
-          questions,
         }),
       });
 
@@ -40,7 +37,9 @@ export default function PreviewPage() {
       }
 
       const data = await response.json();
+
       alert(`Deployment successful! Contract Address: ${data.contractAddress}`);
+      // 続けてフォームの情報をブロックチェーンに保存するなどの処理を実行
     } catch (error) {
       console.error("Error deploying contract:", error);
       alert("Deployment failed. Please try again.");
@@ -60,20 +59,14 @@ export default function PreviewPage() {
         questions={questions}
         ratings={ratings}
         readonly={true}
-        setRatings={function (ratings: number[]): void {
-          throw new Error("Function not implemented.");
-        }}
+        setRatings={() => {}}
       />
       <TokenDetailsForm
         tokenName={tokenName}
         price={price}
         readonly={true}
-        setTokenName={function (value: string): void {
-          throw new Error("Function not implemented.");
-        }}
-        setPrice={function (value: string): void {
-          throw new Error("Function not implemented.");
-        }}
+        setTokenName={() => {}}
+        setPrice={() => {}}
       />
       <div className="flex justify-center space-x-4">
         <button
