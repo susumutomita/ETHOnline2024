@@ -62,3 +62,12 @@ export interface FeedbackContextType {
 export interface FeedbackProviderProps {
   children: ReactNode;
 }
+
+export interface MinaModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  title: string;
+  message: string;
+  confirmLabel: string;
+}

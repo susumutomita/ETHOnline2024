@@ -1,13 +1,6 @@
 import React from "react";
 
-interface MinaModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  title: string;
-  message: string;
-  confirmLabel: string;
-}
+import { MinaModalProps } from "@/components/types";
 
 const MinaModal: React.FC<MinaModalProps> = ({
   isOpen,
