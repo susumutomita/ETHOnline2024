@@ -1,6 +1,8 @@
 "use client";
-import React, { useEffect } from "react";
+
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { BrowserProvider, ContractFactory } from "ethers"; // v6.x でのインポート方法
 import TokenDetailsForm from "@/components/FeedbackForm/TokenDetailsForm";
 import QuestionList from "@/components/FeedbackForm/QuestionList";
 import { useFeedbackContext } from "@/components/FeedbackForm/FeedbackContext";
@@ -17,11 +19,38 @@ export default function PreviewPage() {
     tokenContractAddress,
   } = useFeedbackContext();
 
+  const [deploying, setDeploying] = useState(false);
   const router = useRouter();
 
   const handleDeploy = async () => {
+    setDeploying(true);
     try {
-      const response = await fetch("/api/deploy-contract", {
+      if (typeof window.ethereum === "undefined") {
+        alert("MetaMask is not installed!");
+        setDeploying(false);
+        return;
+      }
+
+      // メタマスクに接続して署名者を取得
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+
+      // スマートコントラクトをデプロイするためのファクトリを作成
+      // const contractFactory = new ContractFactory(abi, bytecode, signer);
+
+      // // スマートコントラクトをデプロイ
+      // const contract = await contractFactory.deploy(tokenName, price);
+
+      // // デプロイが完了するまで待機
+      // await contract.waitForDeployment();
+      const contractAddress = tokenContractAddress;
+      // // コントラクトアドレスを取得して表示
+      // const contractAddress = contract.target;
+      // alert(`Deployment successful! Contract Address: ${contractAddress}`);
+
+      // 必要ならばフォームデータの保存処理を追加
+      const response = await fetch("/api/save-form-data", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,20 +58,22 @@ export default function PreviewPage() {
         body: JSON.stringify({
           tokenName,
           price,
+          formData: { productName, category, feedbackType, questions },
+          contractAddress: contractAddress,
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to deploy contract");
+        throw new Error("Failed to save form data");
       }
 
       const data = await response.json();
-
-      alert(`Deployment successful! Contract Address: ${data.contractAddress}`);
-      // 続けてフォームの情報をブロックチェーンに保存するなどの処理を実行
+      alert(`Form data saved successfully! CID: ${data.cid}`);
     } catch (error) {
       console.error("Error deploying contract:", error);
       alert("Deployment failed. Please try again.");
+    } finally {
+      setDeploying(false);
     }
   };
 
@@ -72,8 +103,9 @@ export default function PreviewPage() {
         <button
           onClick={handleDeploy}
           className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4"
+          disabled={deploying}
         >
-          Confirm and Continue to Deployment
+          {deploying ? "Deploying..." : "Confirm and Continue to Deployment"}
         </button>
         <button
           type="button"

@@ -1,2 +1,4 @@
-CounterTest:testFuzz_SetNumber(uint256) (runs: 256, μ: 30199, ~: 31288)
-CounterTest:test_Increment() (gas: 31303)
+FeedbackSystemTest:test_CreateFeedbackForm() (gas: 93367)
+FeedbackSystemTest:test_GetAverageScore() (gas: 344287)
+FeedbackSystemTest:test_SendToken() (gas: 42708)
+FeedbackSystemTest:test_SubmitFeedback() (gas: 256068)
