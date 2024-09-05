@@ -42,6 +42,9 @@ export default function FeedbackFormList() {
           case BigInt(97):
             selectedAddress = contractAddresses.bnbTestnet;
             break;
+          case BigInt(84532): // Base Sepolia Testnet ID
+            selectedAddress = contractAddresses.baseSepoliaTestnet;
+            break;
           default:
             setError("Unsupported network");
             setLoading(false);
@@ -51,7 +54,6 @@ export default function FeedbackFormList() {
         setContractAddress(selectedAddress);
         const contract = new ethers.Contract(selectedAddress, abi, signer);
 
-        // フィードバックフォームのデータを取得
         const formIds = await contract.getFormIds();
         const formsData = await Promise.all(
           formIds.map(async (formId: number) => {

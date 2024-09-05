@@ -24,6 +24,28 @@ export const scrollSepolia: Chain = {
   testnet: true,
 };
 
+export const baseSepoliaTestnet: Chain = {
+  id: 84532,
+  name: "Base Sepolia Testnet",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Base Sepolia",
+    symbol: "Base Sepolia",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://sepolia.base.org"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "BaseSepoliaexplorer",
+      url: "https://sepolia-explorer.base.org",
+    },
+  },
+  testnet: true,
+};
+
 export const bscTestnet: Chain = {
   id: 97,
   name: "BNB Testnet",
@@ -67,3 +89,5 @@ export const greenfieldTestnet: Chain = {
   },
   testnet: true,
 };
+
+export const supportedChains = [scrollSepolia, baseSepoliaTestnet, bscTestnet];

@@ -1,16 +1,18 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useFeedbackContext } from "@/components/FeedbackForm/FeedbackContext";
+import { Contract, BrowserProvider } from "ethers";
 import FeedbackFormFields from "@/components/FeedbackForm/FeedbackFormFields";
 import TokenDetailsForm from "@/components/FeedbackForm/TokenDetailsForm";
 import QuestionList from "@/components/FeedbackForm/QuestionList";
+import { useFeedbackContext } from "@/components/FeedbackForm/FeedbackContext";
+import { abi, contractAddresses } from "../../app/constants/contract";
 import { Question, FeedbackFormProps } from "@/components/types";
 
 export default function FeedbackForm({
   onQuestionsGenerated,
   setIsLoading,
   isLoading,
+  setTokenContractAddress,
 }: FeedbackFormProps) {
   const {
     productName,
@@ -30,12 +32,7 @@ export default function FeedbackForm({
   } = useFeedbackContext();
 
   const [error, setError] = useState<string | null>(null);
-
-  const router = useRouter();
-
-  const navigateToPreviewPage = () => {
-    router.push("/feedback/preview");
-  };
+  const [submitting, setSubmitting] = useState(false);
 
   const generateQuestions = async () => {
     setIsLoading(true);
@@ -87,6 +84,53 @@ export default function FeedbackForm({
     console.log("Price set:", price);
   }, [questions, tokenName, price]);
 
+  // MetaMaskを使用してフォームデータをブロックチェーンに送信する
+  const submitToBlockchain = async () => {
+    if (!window.ethereum) {
+      setError("MetaMask is not installed");
+      return;
+    }
+
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const network = await provider.getNetwork();
+
+      let selectedAddress = "";
+      switch (BigInt(network.chainId)) {
+        case BigInt(534351): // Scroll Testnet ID
+          selectedAddress = contractAddresses.scrollTestnet;
+          break;
+        case BigInt(97): // BNB Testnet ID
+          selectedAddress = contractAddresses.bnbTestnet;
+          break;
+        case BigInt(84532): // Base Sepolia Testnet ID
+          selectedAddress = contractAddresses.baseSepoliaTestnet;
+          break;
+        default:
+          setError("Unsupported network");
+          setSubmitting(false);
+          return;
+      }
+      const contract = new Contract(selectedAddress, abi, signer);
+
+      const tx = await contract.createFeedbackForm(productName, category);
+
+      await tx.wait();
+
+      alert("Feedback form submitted successfully!");
+    } catch (error: any) {
+      console.error("Error submitting form:", error);
+      setError("Failed to submit form to the blockchain.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className="text-center">
       <FeedbackFormFields
@@ -108,19 +152,12 @@ export default function FeedbackForm({
         setRatings={setRatings}
       />
 
-      <TokenDetailsForm
-        tokenName={tokenName}
-        setTokenName={setTokenName}
-        price={price}
-        setPrice={setPrice}
-      />
-
       <button
-        onClick={navigateToPreviewPage}
-        className={`bg-green-500 text-white p-2 rounded w-full mt-6 ${questions.length === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
-        disabled={questions.length === 0}
+        onClick={submitToBlockchain}
+        className={`bg-green-500 text-white p-2 rounded w-full mt-6 ${submitting || questions.length === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+        disabled={submitting || questions.length === 0}
       >
-        Continue to Preview
+        {submitting ? "Submitting..." : "Submit to Blockchain"}
       </button>
     </div>
   );

@@ -30,10 +30,7 @@ export default function NavBar() {
             <p>BlockFeedback</p>
           </Link>
           <nav className="flex items-center space-x-4 ml-10">
-            <Link
-              href="/feedback/create"
-              className="text-gray-500 hover:underline"
-            >
+            <Link href="/feedback" className="text-gray-500 hover:underline">
               Create Feedback Form
             </Link>
             <span className="text-gray-300">|</span>
