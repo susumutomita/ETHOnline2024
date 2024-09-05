@@ -2,7 +2,7 @@
 export const contractAddresses = {
   scrollTestnet: "0x324cf87A3A2B92FADBCDe6798c1a7ac9949c973b",
   bnbTestnet: "0x74Ba9DC4ad8a89a9dcbB51D8a91E787096ED3E6F",
-  baseSepoliaTestnet: "0xEDF2D523E673271a05662211F2c32cadC991D68B",
+  baseSepoliaTestnet: "0x8DA7103A97f04689bBBEC96E09B20F74Be784D5D",
 };
 export const abi = [
   {
@@ -195,6 +195,19 @@ export const abi = [
         internalType: "uint256",
       },
     ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getFeedbackIdCounter",
+    inputs: [],
     outputs: [
       {
         name: "",

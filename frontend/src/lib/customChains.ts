@@ -89,3 +89,5 @@ export const greenfieldTestnet: Chain = {
   },
   testnet: true,
 };
+
+export const supportedChains = [scrollSepolia, baseSepoliaTestnet, bscTestnet];

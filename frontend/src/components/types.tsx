@@ -1,9 +1,13 @@
+// src/types.ts
 import { ReactNode, Dispatch, SetStateAction } from "react";
+
+// Questionに関するインターフェース
 export interface Question {
   id: string;
   text: string;
 }
 
+// FeedbackForm に関連するインターフェース
 export interface FeedbackFormProps {
   onQuestionsGenerated: (generatedQuestions: string[]) => void;
   setIsLoading: (loading: boolean) => void;
@@ -39,6 +43,22 @@ export interface TokenDetailsFormProps {
   readonly?: boolean;
 }
 
+// Feedbackに関連するインターフェース
+export interface Feedback {
+  id: number;
+  customer: string;
+  score: number;
+  comment: string;
+}
+
+export interface FeedbackForm {
+  productName: string;
+  category: string;
+  totalFeedbackScore: number;
+  feedbackCount: number;
+}
+
+// フィードバックコンテキスト
 export interface FeedbackContextType {
   productName: string;
   setProductName: (name: string) => void;
@@ -63,6 +83,7 @@ export interface FeedbackProviderProps {
   children: ReactNode;
 }
 
+// モーダルのインターフェース
 export interface MinaModalProps {
   isOpen: boolean;
   onClose: () => void;

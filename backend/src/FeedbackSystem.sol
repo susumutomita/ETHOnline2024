@@ -55,6 +55,11 @@ contract FeedbackSystem is ERC20, Ownable {
         emit FeedbackSubmitted(_formId, msg.sender, _score, _comment);
     }
 
+    // フィードバックフォームのカウントを返す関数を追加
+    function getFeedbackIdCounter() external view returns (uint256) {
+        return feedbackIdCounter;
+    }
+
     function getFeedbacks(uint256 _formId) external view returns (Feedback[] memory) {
         return feedbacks[_formId];
     }
