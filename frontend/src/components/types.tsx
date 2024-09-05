@@ -5,7 +5,7 @@ export interface Question {
 }
 
 export interface FeedbackFormProps {
-  onQuestionsGenerated: (questions: string[]) => void;
+  onQuestionsGenerated: (generatedQuestions: string[]) => void;
   setIsLoading: (loading: boolean) => void;
   isLoading: boolean;
   readonly?: boolean;

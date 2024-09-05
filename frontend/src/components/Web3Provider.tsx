@@ -8,13 +8,14 @@ import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import {
   scrollSepolia,
   bscTestnet,
+  baseSepoliaTestnet,
   greenfieldTestnet,
 } from "@/lib/customChains";
 
 const config = createConfig(
   getDefaultConfig({
     appName: "BlockFeedback",
-    chains: [scrollSepolia, bscTestnet, greenfieldTestnet],
+    chains: [scrollSepolia, bscTestnet, baseSepoliaTestnet, greenfieldTestnet],
     walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
   }),
 );
