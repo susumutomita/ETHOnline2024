@@ -2,7 +2,7 @@
 export const contractAddresses = {
   scrollTestnet: "0x324cf87A3A2B92FADBCDe6798c1a7ac9949c973b",
   bnbTestnet: "0x74Ba9DC4ad8a89a9dcbB51D8a91E787096ED3E6F",
-  baseSepoliaTestnet: "0x8DA7103A97f04689bBBEC96E09B20F74Be784D5D",
+  baseSepoliaTestnet: "0x97a5F8D3451dAf6B24Ea6D34626Bc3d67Ab5c8D7",
 };
 export const abi = [
   {
@@ -94,6 +94,11 @@ export const abi = [
         name: "_category",
         type: "string",
         internalType: "string",
+      },
+      {
+        name: "_questions",
+        type: "string[]",
+        internalType: "string[]",
       },
     ],
     outputs: [],
@@ -260,6 +265,37 @@ export const abi = [
   },
   {
     type: "function",
+    name: "getQuestions",
+    inputs: [
+      {
+        name: "_formId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "tuple[]",
+        internalType: "struct FeedbackSystem.Question[]",
+        components: [
+          {
+            name: "id",
+            type: "uint256",
+            internalType: "uint256",
+          },
+          {
+            name: "text",
+            type: "string",
+            internalType: "string",
+          },
+        ],
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "name",
     inputs: [],
     outputs: [
@@ -280,6 +316,35 @@ export const abi = [
         name: "",
         type: "address",
         internalType: "address",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "questions",
+    inputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "id",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "text",
+        type: "string",
+        internalType: "string",
       },
     ],
     stateMutability: "view",
