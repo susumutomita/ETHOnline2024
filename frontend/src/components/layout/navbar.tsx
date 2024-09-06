@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import useScroll from "@/lib/hooks/use-scroll";
-import MinaWalletConnect from "@/components/AuroWallet/MinaWalletConnect"; // MinaWalletConnectをインポート
 import { ConnectKitButton } from "connectkit";
 
 export default function NavBar() {
@@ -48,10 +47,6 @@ export default function NavBar() {
               About
             </Link>
           </nav>
-          <div className="flex items-center space-x-4 ml-auto">
-            {/* ConnectKitButtonの代わりにMinaWalletConnectを使用 */}
-            <MinaWalletConnect />
-          </div>
           <div className="flex items-center space-x-4 ml-auto">
             <ConnectKitButton />
           </div>
