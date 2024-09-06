@@ -40,7 +40,7 @@ export default function NavBar() {
               href="/feedback/results"
               className="text-gray-500 hover:underline"
             >
-              View Feedback Results
+              View Feedback
             </Link>
             <span className="text-gray-300">|</span>
             <Link href="/about" className="text-gray-500 hover:underline">

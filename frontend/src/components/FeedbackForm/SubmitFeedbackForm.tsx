@@ -6,13 +6,7 @@ import { BrowserProvider, Contract } from "ethers";
 import { abi, contractAddresses } from "../../app/constants/contract";
 
 // 星評価のコンポーネント
-function StarRating({
-  value,
-  onChange,
-}: {
-  value: number;
-  onChange: (value: number) => void;
-}) {
+function StarRating({ value, onChange }: { value: number; onChange: (value: number) => void }) {
   const [rating, setRating] = useState(value);
 
   const handleClick = (newValue: number) => {
@@ -122,11 +116,9 @@ export default function SubmitFeedbackForm({ id }: SubmitFeedbackFormProps) {
 
       const contract = new Contract(selectedAddress, abi, signer);
 
-      // 各質問に対するフィードバックとスコアを送信
-      for (let i = 0; i < form.questions.length; i++) {
-        const tx = await contract.submitFeedback(id, score[i], feedback[i]); // 各質問に対するフィードバックをスマートコントラクトに送信
-        await tx.wait();
-      }
+      // フィードバックとスコアを一括で送信
+      const tx = await contract.submitFeedbackBatch(id, score, feedback); // スマートコントラクト側のsubmitFeedbackBatch関数を使用
+      await tx.wait();
 
       setSuccess(true);
     } catch (error: any) {
@@ -143,9 +135,7 @@ export default function SubmitFeedbackForm({ id }: SubmitFeedbackFormProps) {
 
       {error && <p className="text-red-600">{error}</p>}
       {loading && <p>Loading...</p>}
-      {success && (
-        <p className="text-green-600">Feedback submitted successfully!</p>
-      )}
+      {success && <p className="text-green-600">Feedback submitted successfully!</p>}
 
       {!loading && form && (
         <div>

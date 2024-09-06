@@ -118,7 +118,7 @@ export default function ViewFeedbackForms() {
                   href={`/feedback/${form.id}`}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-md w-full block text-center"
                 >
-                  View Feedback Details
+                  Submit Feedback
                 </Link>
               </div>
             ))}
