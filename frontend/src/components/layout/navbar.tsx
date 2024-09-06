@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import useScroll from "@/lib/hooks/use-scroll";
-import MinaWalletConnect from "@/components/AuroWallet/MinaWalletConnect"; // MinaWalletConnectをインポート
 import { ConnectKitButton } from "connectkit";
 
 export default function NavBar() {
@@ -30,7 +29,10 @@ export default function NavBar() {
             <p>BlockFeedback</p>
           </Link>
           <nav className="flex items-center space-x-4 ml-10">
-            <Link href="/feedback" className="text-gray-500 hover:underline">
+            <Link
+              href="/feedback/create"
+              className="text-gray-500 hover:underline"
+            >
               Create Feedback Form
             </Link>
             <span className="text-gray-300">|</span>
@@ -45,10 +47,6 @@ export default function NavBar() {
               About
             </Link>
           </nav>
-          <div className="flex items-center space-x-4 ml-auto">
-            {/* ConnectKitButtonの代わりにMinaWalletConnectを使用 */}
-            <MinaWalletConnect />
-          </div>
           <div className="flex items-center space-x-4 ml-auto">
             <ConnectKitButton />
           </div>

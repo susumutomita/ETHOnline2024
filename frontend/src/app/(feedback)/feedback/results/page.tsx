@@ -56,11 +56,19 @@ export default function ViewFeedbackForms() {
         const forms = [];
         for (let i = 1; i <= formCount; i++) {
           const form = await contract.feedbackForms(i);
+
+          // 質問を取得
+          const questions = await contract.getQuestions(i);
+
+          // 質問をテキストで配列に変換
+          const questionTexts = questions.map((q: any) => q.text);
+
           forms.push({
             productName: form.productName,
             category: form.category,
             totalFeedbackScore: form.totalFeedbackScore,
             feedbackCount: form.feedbackCount,
+            questions: questionTexts, // 質問をフォームに追加
           });
         }
         setFeedbackForms(forms);
@@ -89,7 +97,7 @@ export default function ViewFeedbackForms() {
       const formattedFeedbacks = feedbackList.map((feedback: any) => ({
         id: feedback.id,
         customer: feedback.customer,
-        score: feedback.score,
+        score: feedback.score, // スコアを正しく取得
         comment: feedback.comment,
       }));
       setFeedbacks(formattedFeedbacks);
@@ -116,33 +124,31 @@ export default function ViewFeedbackForms() {
         <p>Loading...</p>
       ) : (
         <>
-          <table className="min-w-full bg-white border">
-            <thead>
-              <tr>
-                <th className="py-2 px-4 border-b">Product Name</th>
-                <th className="py-2 px-4 border-b">Category</th>
-                <th className="py-2 px-4 border-b">Feedback Count</th>
-                <th className="py-2 px-4 border-b">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {feedbackForms.map((form, index) => (
-                <tr key={index}>
-                  <td className="py-2 px-4 border-b">{form.productName}</td>
-                  <td className="py-2 px-4 border-b">{form.category}</td>
-                  <td className="py-2 px-4 border-b">{form.feedbackCount}</td>
-                  <td className="py-2 px-4 border-b">
-                    <button
-                      onClick={() => viewFeedbackDetails(index + 1)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded-full shadow-md"
-                    >
-                      View Feedback
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="grid grid-cols-1 gap-4">
+            {feedbackForms.map((form, index) => (
+              <div key={index} className="bg-white p-4 rounded shadow-md">
+                <h2 className="text-xl font-bold mb-2">{form.productName}</h2>
+                <p className="text-gray-600 mb-2">Category: {form.category}</p>
+                <p className="text-gray-600 mb-2">
+                  Feedback Count: {form.feedbackCount}
+                </p>
+                <div className="text-left">
+                  <h3 className="font-semibold">Questions:</h3>
+                  <ul className="list-disc list-inside ml-4 mb-4">
+                    {form.questions.map((question: string, qIndex: number) => (
+                      <li key={qIndex}>{question}</li>
+                    ))}
+                  </ul>
+                </div>
+                <button
+                  onClick={() => viewFeedbackDetails(index + 1)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-md w-full"
+                >
+                  View Feedback
+                </button>
+              </div>
+            ))}
+          </div>
 
           {selectedFormId && (
             <div className="mt-6">

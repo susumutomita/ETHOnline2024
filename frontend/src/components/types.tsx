@@ -56,9 +56,9 @@ export interface FeedbackForm {
   category: string;
   totalFeedbackScore: number;
   feedbackCount: number;
+  questions: string[];
 }
 
-// フィードバックコンテキスト
 export interface FeedbackContextType {
   productName: string;
   setProductName: (name: string) => void;
@@ -83,7 +83,6 @@ export interface FeedbackProviderProps {
   children: ReactNode;
 }
 
-// モーダルのインターフェース
 export interface MinaModalProps {
   isOpen: boolean;
   onClose: () => void;

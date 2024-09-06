@@ -118,7 +118,13 @@ export default function FeedbackForm({
       }
       const contract = new Contract(selectedAddress, abi, signer);
 
-      const tx = await contract.createFeedbackForm(productName, category);
+      const questionTexts = questions.map((question) => question.text);
+
+      const tx = await contract.createFeedbackForm(
+        productName,
+        category,
+        questionTexts,
+      );
 
       await tx.wait();
 
