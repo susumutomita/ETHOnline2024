@@ -5,14 +5,44 @@ import { ethers } from "ethers";
 import { BrowserProvider, Contract } from "ethers";
 import { abi, contractAddresses } from "../../app/constants/contract";
 
+// 星評価のコンポーネント
+function StarRating({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (value: number) => void;
+}) {
+  const [rating, setRating] = useState(value);
+
+  const handleClick = (newValue: number) => {
+    setRating(newValue);
+    onChange(newValue);
+  };
+
+  return (
+    <div className="flex">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span
+          key={star}
+          onClick={() => handleClick(star)}
+          className={`cursor-pointer ${star <= rating ? "text-yellow-500" : "text-gray-400"}`}
+        >
+          ★
+        </span>
+      ))}
+    </div>
+  );
+}
+
 interface SubmitFeedbackFormProps {
   id: string; // フォームIDをパラメータとして受け取る
 }
 
 export default function SubmitFeedbackForm({ id }: SubmitFeedbackFormProps) {
   const [form, setForm] = useState<any | null>(null);
-  const [feedback, setFeedback] = useState<string>("");
-  const [score, setScore] = useState<number>(0);
+  const [feedback, setFeedback] = useState<string[]>([]); // 各質問に対するフィードバックを配列で保持
+  const [score, setScore] = useState<number[]>([]); // 各質問に対するスコアも配列で保持
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -37,7 +67,19 @@ export default function SubmitFeedbackForm({ id }: SubmitFeedbackFormProps) {
 
         const contract = new Contract(selectedAddress, abi, signer);
         const formDetails = await contract.feedbackForms(id); // フィードバックフォームの情報を取得
-        setForm(formDetails);
+
+        // 質問を取得
+        const questions = await contract.getQuestions(id); // スマートコントラクトから質問を取得
+        const formattedQuestions = questions.map((q: any) => q.text); // 質問をテキストでフォーマット
+
+        setForm({
+          ...formDetails,
+          questions: formattedQuestions, // フォームに質問を追加
+        });
+
+        // フィードバックとスコア用に空の配列を用意
+        setFeedback(new Array(formattedQuestions.length).fill(""));
+        setScore(new Array(formattedQuestions.length).fill(0));
       } catch (error: any) {
         console.error("Error fetching form details:", error);
         setError(`Failed to fetch form details: ${error.message || error}`);
@@ -79,8 +121,12 @@ export default function SubmitFeedbackForm({ id }: SubmitFeedbackFormProps) {
       }
 
       const contract = new Contract(selectedAddress, abi, signer);
-      const tx = await contract.submitFeedback(id, score, feedback); // フィードバックをスマートコントラクトに送信
-      await tx.wait();
+
+      // 各質問に対するフィードバックとスコアを送信
+      for (let i = 0; i < form.questions.length; i++) {
+        const tx = await contract.submitFeedback(id, score[i], feedback[i]); // 各質問に対するフィードバックをスマートコントラクトに送信
+        await tx.wait();
+      }
 
       setSuccess(true);
     } catch (error: any) {
@@ -103,21 +149,23 @@ export default function SubmitFeedbackForm({ id }: SubmitFeedbackFormProps) {
 
       {!loading && form && (
         <div>
-          <textarea
-            className="w-full p-2 border rounded"
-            value={feedback}
-            onChange={(e) => setFeedback(e.target.value)}
-            placeholder="Enter your feedback"
-          />
-          <input
-            type="number"
-            className="w-full p-2 border rounded mt-4"
-            value={score}
-            onChange={(e) => setScore(Number(e.target.value))}
-            placeholder="Rate 1 to 5"
-            max={5}
-            min={1}
-          />
+          {form.questions?.map((question: string, index: number) => (
+            <div key={index} className="mb-4">
+              <p>{question}</p>
+              {/* スター評価のコンポーネント */}
+              <StarRating
+                value={score[index]}
+                onChange={(newRating) =>
+                  setScore((prev) => {
+                    const updatedScores = [...prev];
+                    updatedScores[index] = newRating;
+                    return updatedScores;
+                  })
+                }
+              />
+            </div>
+          ))}
+
           <button
             onClick={submitFeedback}
             className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mt-4"
