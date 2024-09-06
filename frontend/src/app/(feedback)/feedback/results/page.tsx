@@ -1,6 +1,8 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { BrowserProvider, Contract } from "ethers";
+import Link from "next/link"; // Link コンポーネントをインポート
 import { abi, contractAddresses } from "../../../constants/contract";
 import { FeedbackFormProps, Feedback, FeedbackForm } from "@/components/types";
 
@@ -64,6 +66,7 @@ export default function ViewFeedbackForms() {
           const questionTexts = questions.map((q: any) => q.text);
 
           forms.push({
+            id: i, // フォームIDを追加
             productName: form.productName,
             category: form.category,
             totalFeedbackScore: form.totalFeedbackScore,
@@ -83,37 +86,6 @@ export default function ViewFeedbackForms() {
     fetchFeedbackFormsAndDetails();
   }, []);
 
-  const viewFeedbackDetails = async (formId: number) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const provider = new BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const contract = new Contract(contractAddress, abi, signer);
-
-      // フィードバックの詳細を取得
-      const feedbackList = await contract.getFeedbacks(formId);
-      const formattedFeedbacks = feedbackList.map((feedback: any) => ({
-        id: feedback.id,
-        customer: feedback.customer,
-        score: feedback.score, // スコアを正しく取得
-        comment: feedback.comment,
-      }));
-      setFeedbacks(formattedFeedbacks);
-
-      // 平均スコアを取得
-      const avgScore = await contract.getAverageScore(formId);
-      setAverageScore(avgScore);
-      setSelectedFormId(formId);
-    } catch (error: any) {
-      console.error("Error fetching feedback details:", error);
-      setError(`Failed to fetch feedback details: ${error.message || error}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="z-10 w-full max-w-xl px-5 xl:px-0 text-center">
       <h1 className="text-3xl font-bold mb-6">Feedback Forms</h1>
@@ -125,9 +97,10 @@ export default function ViewFeedbackForms() {
       ) : (
         <>
           <div className="grid grid-cols-1 gap-4">
-            {feedbackForms.map((form, index) => (
-              <div key={index} className="bg-white p-4 rounded shadow-md">
+            {feedbackForms.map((form) => (
+              <div key={form.id} className="bg-white p-4 rounded shadow-md">
                 <h2 className="text-xl font-bold mb-2">{form.productName}</h2>
+                <p className="text-gray-600 mb-2">Id: {form.id}</p>
                 <p className="text-gray-600 mb-2">Category: {form.category}</p>
                 <p className="text-gray-600 mb-2">
                   Feedback Count: {form.feedbackCount}
@@ -140,31 +113,16 @@ export default function ViewFeedbackForms() {
                     ))}
                   </ul>
                 </div>
-                <button
-                  onClick={() => viewFeedbackDetails(index + 1)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-md w-full"
+                {/* 詳細ページへのリンクを追加 */}
+                <Link
+                  href={`/feedback/${form.id}`}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-md w-full block text-center"
                 >
-                  View Feedback
-                </button>
+                  View Feedback Details
+                </Link>
               </div>
             ))}
           </div>
-
-          {selectedFormId && (
-            <div className="mt-6">
-              <h2 className="text-lg font-bold mb-4">Feedback Details</h2>
-              <p>Average Score: {averageScore}</p>
-              <ul className="mt-4">
-                {feedbacks.map((feedback) => (
-                  <li key={feedback.id} className="mb-2 p-4 border rounded">
-                    <p>Customer: {feedback.customer}</p>
-                    <p>Score: {feedback.score}</p>
-                    <p>Comment: {feedback.comment}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
         </>
       )}
     </div>

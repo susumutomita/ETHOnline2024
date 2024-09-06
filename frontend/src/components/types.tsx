@@ -52,6 +52,7 @@ export interface Feedback {
 }
 
 export interface FeedbackForm {
+  id: number;
   productName: string;
   category: string;
   totalFeedbackScore: number;

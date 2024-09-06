@@ -43,6 +43,7 @@
     "next-auth": "^4.24.7",
     "ollama": "^0.5.8",
     "pino-pretty": "^11.2.2",
+    "qrcode.react": "^4.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
