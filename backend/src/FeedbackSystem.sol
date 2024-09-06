@@ -29,6 +29,7 @@ contract FeedbackSystem is ERC20, Ownable {
     mapping(uint256 => FeedbackForm) public feedbackForms;
     mapping(uint256 => Feedback[]) public feedbacks;
     mapping(uint256 => Question[]) public questions;
+    uint256[] public formIds;
 
     event FeedbackFormCreated(uint256 indexed formId, string productName, string category);
     event FeedbackSubmitted(uint256 indexed formId, address indexed customer, uint256 score, string comment);
@@ -53,7 +54,13 @@ contract FeedbackSystem is ERC20, Ownable {
             questions[newFormId].push(Question({id: i + 1, text: _questions[i]}));
         }
 
+        formIds.push(newFormId); // フォームIDをリストに追加
         emit FeedbackFormCreated(newFormId, _productName, _category);
+    }
+
+    // フォームIDのリストを返す関数
+    function getFormIds() external view returns (uint256[] memory) {
+        return formIds;
     }
 
     function submitFeedback(uint256 _formId, uint256 _score, string memory _comment) external {

@@ -21,7 +21,7 @@ export default function Home() {
           title="Create Feedback Form"
           description="Want to gather feedback from your customers and improve their experience? Click here to create a feedback form."
           demo={
-            <Link href="/feedback">
+            <Link href="/feedback/create">
               <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">
                 Create Feedback Form
               </button>

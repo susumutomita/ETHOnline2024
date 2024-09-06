@@ -1,8 +1,8 @@
 // constants/contract.js
 export const contractAddresses = {
   scrollTestnet: "0x324cf87A3A2B92FADBCDe6798c1a7ac9949c973b",
-  bnbTestnet: "0x74Ba9DC4ad8a89a9dcbB51D8a91E787096ED3E6F",
-  baseSepoliaTestnet: "0x97a5F8D3451dAf6B24Ea6D34626Bc3d67Ab5c8D7",
+  bnbTestnet: "0xe6721d84e32ed1511CB3207f1A8615ceAbb78348",
+  baseSepoliaTestnet: "0x824134809a3805F831fb2A7e8e673fd94E8d521F",
 };
 export const abi = [
   {
@@ -192,6 +192,25 @@ export const abi = [
   },
   {
     type: "function",
+    name: "formIds",
+    inputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "getAverageScore",
     inputs: [
       {
@@ -259,6 +278,19 @@ export const abi = [
             internalType: "string",
           },
         ],
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getFormIds",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256[]",
+        internalType: "uint256[]",
       },
     ],
     stateMutability: "view",

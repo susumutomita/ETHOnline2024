@@ -90,7 +90,21 @@ contract FeedbackSystemTest is Test {
         feedbackSystem.submitFeedback(999, 3, "This form does not exist!");
     }
 
+    // フォームID取得テスト
+    function test_GetFormIds() public {
+        string[] memory questions = new string[](2);
+        questions[0] = "Is the product durable?";
+        questions[1] = "Would you buy this again?";
+
+        feedbackSystem.createFeedbackForm("Product X", "Category X", questions);
+        feedbackSystem.createFeedbackForm("Product Y", "Category Y", questions);
+
+        // 2つのフィードバックフォームが作成されているか確認
+        uint256 formIdCounter = feedbackSystem.getFeedbackIdCounter();
+        assertEq(formIdCounter, 2);
+    }
     // 平均スコアの計算テスト
+
     function test_GetAverageScore() public {
         // 配列を初期化
         string[] memory questions = new string[](3);
