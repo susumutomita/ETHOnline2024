@@ -15,7 +15,7 @@ export default function SubmitFeedbackPage() {
   }
 
   return (
-    <div className="text-center">
+    <div className="flex flex-row justify-center mt-8 space-x-8 z-10 w-full max-w-screen-xl px-5 xl:px-0 text-center">
       <SubmitFeedbackForm id={id} />
     </div>
   );
