@@ -22,20 +22,15 @@ contract FeedbackSystemTest is Test {
 
         feedbackSystem.createFeedbackForm("Product A", "Category 1", questions);
 
-        (
-            string memory productName,
-            string memory category,
-            uint256 totalFeedbackScore,
-            uint256 feedbackCount
-        ) = feedbackSystem.feedbackForms(1);
+        (string memory productName, string memory category, uint256 totalFeedbackScore, uint256 feedbackCount) =
+            feedbackSystem.feedbackForms(1);
 
         assertEq(productName, "Product A");
         assertEq(category, "Category 1");
         assertEq(totalFeedbackScore, 0);
         assertEq(feedbackCount, 0);
 
-        FeedbackSystem.Question[] memory formQuestions = feedbackSystem
-            .getQuestions(1);
+        FeedbackSystem.Question[] memory formQuestions = feedbackSystem.getQuestions(1);
         assertEq(formQuestions.length, 3);
         assertEq(formQuestions[0].text, "How is the product?");
         assertEq(formQuestions[1].text, "Was the price appropriate?");
@@ -53,20 +48,15 @@ contract FeedbackSystemTest is Test {
         vm.prank(user1);
         feedbackSystem.submitFeedback(1, 4, "Good product!");
 
-        (, , uint256 totalFeedbackScore, uint256 feedbackCount) = feedbackSystem
-            .feedbackForms(1);
+        (,, uint256 totalFeedbackScore, uint256 feedbackCount) = feedbackSystem.feedbackForms(1);
 
         assertEq(totalFeedbackScore, 4);
         assertEq(feedbackCount, 1);
 
-        FeedbackSystem.Feedback[] memory feedbacks = feedbackSystem
-            .getFeedbacks(1);
+        FeedbackSystem.Feedback[] memory feedbacks = feedbackSystem.getFeedbacks(1);
         assertEq(feedbacks.length, 1);
         assertEq(feedbacks[0].score, 4);
-        assertEq(
-            keccak256(bytes(feedbacks[0].comment)),
-            keccak256(bytes("Good product!"))
-        );
+        assertEq(keccak256(bytes(feedbacks[0].comment)), keccak256(bytes("Good product!")));
     }
 
     function test_SubmitFeedbackBatch() public {
@@ -91,14 +81,12 @@ contract FeedbackSystemTest is Test {
         vm.prank(user1);
         feedbackSystem.submitFeedbackBatch(1, scores, comments);
 
-        (, , uint256 totalFeedbackScore, uint256 feedbackCount) = feedbackSystem
-            .feedbackForms(1);
+        (,, uint256 totalFeedbackScore, uint256 feedbackCount) = feedbackSystem.feedbackForms(1);
 
         assertEq(totalFeedbackScore, 12); // (4 + 5 + 3)
-        assertEq(feedbackCount, 3);
+        assertEq(feedbackCount, 1);
 
-        FeedbackSystem.Feedback[] memory feedbacks = feedbackSystem
-            .getFeedbacks(1);
+        FeedbackSystem.Feedback[] memory feedbacks = feedbackSystem.getFeedbacks(1);
         assertEq(feedbacks.length, 3);
         assertEq(feedbacks[0].score, 4);
         assertEq(feedbacks[1].score, 5);

@@ -8,9 +8,6 @@ import { FeedbackFormProps, Feedback, FeedbackForm } from "@/components/types";
 
 export default function ViewFeedbackForms() {
   const [feedbackForms, setFeedbackForms] = useState<FeedbackForm[]>([]);
-  const [selectedFormId, setSelectedFormId] = useState<number | null>(null);
-  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
-  const [averageScore, setAverageScore] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [contractAddress, setContractAddress] = useState<string>("");
@@ -62,6 +59,9 @@ export default function ViewFeedbackForms() {
           // 質問を取得
           const questions = await contract.getQuestions(i);
 
+          // 平均スコアを取得
+          const averageScore = await contract.getAverageScore(i);
+
           // 質問をテキストで配列に変換
           const questionTexts = questions.map((q: any) => q.text);
 
@@ -70,7 +70,11 @@ export default function ViewFeedbackForms() {
             productName: form.productName,
             category: form.category,
             totalFeedbackScore: form.totalFeedbackScore,
-            feedbackCount: form.feedbackCount,
+            feedbackCount: Number(form.feedbackCount), // フィードバックカウントを数値として追加
+            averageScore:
+              questionTexts.length > 0
+                ? Number(averageScore) / questionTexts.length // 質問の数で平均スコアを割る
+                : Number(averageScore), // 質問がない場合はそのまま表示
             questions: questionTexts, // 質問をフォームに追加
           });
         }
@@ -103,7 +107,14 @@ export default function ViewFeedbackForms() {
                 <p className="text-gray-600 mb-2">Id: {form.id}</p>
                 <p className="text-gray-600 mb-2">Category: {form.category}</p>
                 <p className="text-gray-600 mb-2">
-                  Feedback Count: {form.feedbackCount}
+                  Feedback Count: {form.feedbackCount}{" "}
+                  {/* フィードバック数の表示 */}
+                </p>
+                <p className="text-gray-600 mb-2">
+                  Average Score:{" "}
+                  {form.averageScore
+                    ? form.averageScore.toFixed(2)
+                    : "No feedback yet"}
                 </p>
                 <div className="text-left">
                   <h3 className="font-semibold">Questions:</h3>

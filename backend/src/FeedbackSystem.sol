@@ -45,12 +45,8 @@ contract FeedbackSystem is ERC20, Ownable {
         feedbackIdCounter += 1;
         uint256 newFormId = feedbackIdCounter;
 
-        feedbackForms[newFormId] = FeedbackForm({
-            productName: _productName,
-            category: _category,
-            totalFeedbackScore: 0,
-            feedbackCount: 0
-        });
+        feedbackForms[newFormId] =
+            FeedbackForm({productName: _productName, category: _category, totalFeedbackScore: 0, feedbackCount: 0});
 
         for (uint256 i = 0; i < _questions.length; i++) {
             questions[newFormId].push(Question({id: i + 1, text: _questions[i]}));
@@ -82,6 +78,8 @@ contract FeedbackSystem is ERC20, Ownable {
         require(scores.length == comments.length, "Scores and comments length mismatch");
         require(scores.length > 0, "No feedback provided");
 
+        uint256 totalScoreForThisFeedback = 0;
+
         for (uint256 i = 0; i < scores.length; i++) {
             require(scores[i] >= 1 && scores[i] <= 5, "Invalid score");
             feedbacks[formId].push(
@@ -93,9 +91,14 @@ contract FeedbackSystem is ERC20, Ownable {
                 })
             );
 
-            feedbackForms[formId].totalFeedbackScore += scores[i];
-            feedbackForms[formId].feedbackCount += 1;
+            totalScoreForThisFeedback += scores[i];
         }
+
+        feedbackForms[formId].totalFeedbackScore += totalScoreForThisFeedback;
+
+        feedbackForms[formId].feedbackCount += 1;
+
+        emit FeedbackSubmitted(formId, msg.sender, scores[0], comments[0]); // 最初の質問の情報をイベントに
     }
 
     function getFeedbackIdCounter() external view returns (uint256) {
