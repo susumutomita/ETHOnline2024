@@ -15,28 +15,28 @@ export default async function handler(
     }
 
     const prompt = `
- あなたは、店舗のフィードバックフォームを自動的に生成するためのAIです。以下の商品カテゴリとフィードバックタイプに基づいて、ユーザーからのフィードバックを集めるための具体的で簡潔な質問を生成してください。質問は、番号付きでリスト形式にしてください。また、ユーザーが質問に簡単に答えられるように、質問は一文で終わるようにしてください。
+You are an AI designed to automatically generate feedback forms for stores. Based on the product category and feedback type below, generate specific and concise questions to collect feedback from users. Ensure that the questions are simple and end with a single sentence so users can easily answer them.
 
-- 商品名: ${productName}
-- カテゴリ: ${category}
-- フィードバックタイプ: ${feedbackType}
+- Product Name: ${productName}
+- Category: ${category}
+- Feedback Type: ${feedbackType}
 
-質問のフォーマットは以下のようにしてください、それ以外の補足情報は出力しないでください：
+Please format the questions in a numbered list as shown below. Do not include any extra information beyond the questions:
 
-1. [質問内容]
-2. [質問内容]
-3. [質問内容]
-4. [質問内容]
-5. [質問内容]
+1. [Question]
+2. [Question]
+3. [Question]
+4. [Question]
+5. [Question]
 
-出力例:
-1. この商品の品質についてどのように評価しますか？
-2. この商品は期待に応えましたか？
-3. この商品の使いやすさについてどう思いますか？
-4. 改善点があれば教えてください。
-5. 他にコメントがあれば教えてください。
+Example output:
+1. Is this product appealing to you?
+2. Does this product meet your expectations?
+3. Is the packaging of the product attractive?
+4. Is the price of this product reasonable?
+5. Would you recommend this product to others?
 
-上記の例を参考にして、以下の情報に基づいて5つの質問を生成してください。
+Using the format above, generate 5 questions based on the provided information.
     `;
 
     const response = await parseHtmlWithLLM(prompt);
