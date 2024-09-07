@@ -45,8 +45,12 @@ contract FeedbackSystem is ERC20, Ownable {
         feedbackIdCounter += 1;
         uint256 newFormId = feedbackIdCounter;
 
-        feedbackForms[newFormId] =
-            FeedbackForm({productName: _productName, category: _category, totalFeedbackScore: 0, feedbackCount: 0});
+        feedbackForms[newFormId] = FeedbackForm({
+            productName: _productName,
+            category: _category,
+            totalFeedbackScore: 0,
+            feedbackCount: 0
+        });
 
         for (uint256 i = 0; i < _questions.length; i++) {
             questions[newFormId].push(Question({id: i + 1, text: _questions[i]}));
