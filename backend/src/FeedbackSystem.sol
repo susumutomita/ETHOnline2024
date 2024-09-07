@@ -45,20 +45,17 @@ contract FeedbackSystem is ERC20, Ownable {
         feedbackIdCounter += 1;
         uint256 newFormId = feedbackIdCounter;
 
-        // フィードバックフォームの作成
         feedbackForms[newFormId] =
             FeedbackForm({productName: _productName, category: _category, totalFeedbackScore: 0, feedbackCount: 0});
 
-        // 質問の追加
         for (uint256 i = 0; i < _questions.length; i++) {
             questions[newFormId].push(Question({id: i + 1, text: _questions[i]}));
         }
 
-        formIds.push(newFormId); // フォームIDをリストに追加
+        formIds.push(newFormId);
         emit FeedbackFormCreated(newFormId, _productName, _category);
     }
 
-    // フォームIDのリストを返す関数
     function getFormIds() external view returns (uint256[] memory) {
         return formIds;
     }
@@ -75,6 +72,33 @@ contract FeedbackSystem is ERC20, Ownable {
         feedbackForms[_formId].feedbackCount += 1;
 
         emit FeedbackSubmitted(_formId, msg.sender, _score, _comment);
+    }
+
+    function submitFeedbackBatch(uint256 formId, uint256[] memory scores, string[] memory comments) external {
+        require(scores.length == comments.length, "Scores and comments length mismatch");
+        require(scores.length > 0, "No feedback provided");
+
+        uint256 totalScoreForThisFeedback = 0;
+
+        for (uint256 i = 0; i < scores.length; i++) {
+            require(scores[i] >= 1 && scores[i] <= 5, "Invalid score");
+            feedbacks[formId].push(
+                Feedback({
+                    id: feedbacks[formId].length + 1,
+                    customer: msg.sender,
+                    score: scores[i],
+                    comment: comments[i]
+                })
+            );
+
+            totalScoreForThisFeedback += scores[i];
+        }
+
+        feedbackForms[formId].totalFeedbackScore += totalScoreForThisFeedback;
+
+        feedbackForms[formId].feedbackCount += 1;
+
+        emit FeedbackSubmitted(formId, msg.sender, scores[0], comments[0]); // 最初の質問の情報をイベントに
     }
 
     function getFeedbackIdCounter() external view returns (uint256) {

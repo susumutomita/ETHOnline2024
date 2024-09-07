@@ -6,7 +6,13 @@ import { BrowserProvider, Contract } from "ethers";
 import { abi, contractAddresses } from "../../app/constants/contract";
 
 // 星評価のコンポーネント
-function StarRating({ value, onChange }: { value: number; onChange: (value: number) => void }) {
+function StarRating({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (value: number) => void;
+}) {
   const [rating, setRating] = useState(value);
 
   const handleClick = (newValue: number) => {
@@ -135,7 +141,9 @@ export default function SubmitFeedbackForm({ id }: SubmitFeedbackFormProps) {
 
       {error && <p className="text-red-600">{error}</p>}
       {loading && <p>Loading...</p>}
-      {success && <p className="text-green-600">Feedback submitted successfully!</p>}
+      {success && (
+        <p className="text-green-600">Feedback submitted successfully!</p>
+      )}
 
       {!loading && form && (
         <div>

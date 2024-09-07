@@ -58,6 +58,7 @@ export interface FeedbackForm {
   totalFeedbackScore: number;
   feedbackCount: number;
   questions: string[];
+  averageScore: number;
 }
 
 export interface FeedbackContextType {

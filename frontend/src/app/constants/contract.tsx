@@ -1,7 +1,7 @@
 // constants/contract.js
 export const contractAddresses = {
   scrollTestnet: "0x324cf87A3A2B92FADBCDe6798c1a7ac9949c973b",
-  bnbTestnet: "0xe6721d84e32ed1511CB3207f1A8615ceAbb78348",
+  bnbTestnet: "0x8DA7103A97f04689bBBEC96E09B20F74Be784D5D",
   baseSepoliaTestnet: "0x824134809a3805F831fb2A7e8e673fd94E8d521F",
 };
 export const abi = [
@@ -424,6 +424,29 @@ export const abi = [
         name: "_comment",
         type: "string",
         internalType: "string",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "submitFeedbackBatch",
+    inputs: [
+      {
+        name: "formId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "scores",
+        type: "uint256[]",
+        internalType: "uint256[]",
+      },
+      {
+        name: "comments",
+        type: "string[]",
+        internalType: "string[]",
       },
     ],
     outputs: [],
