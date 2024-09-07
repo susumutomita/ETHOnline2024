@@ -14,10 +14,9 @@ contract FeedbackSystemTest is Test {
         feedbackSystem = new FeedbackSystem();
     }
 
-    // フィードバックフォーム作成テスト
     function test_CreateFeedbackForm() public {
-        // 配列を初期化
         string[] memory questions = new string[](3);
+
         questions[0] = "How is the product?";
         questions[1] = "Was the price appropriate?";
         questions[2] = "Would you recommend this product?";
@@ -32,7 +31,6 @@ contract FeedbackSystemTest is Test {
         assertEq(totalFeedbackScore, 0);
         assertEq(feedbackCount, 0);
 
-        // 質問が正しく保存されているか確認
         FeedbackSystem.Question[] memory formQuestions = feedbackSystem.getQuestions(1);
         assertEq(formQuestions.length, 3);
         assertEq(formQuestions[0].text, "How is the product?");
@@ -40,10 +38,9 @@ contract FeedbackSystemTest is Test {
         assertEq(formQuestions[2].text, "Would you recommend this product?");
     }
 
-    // フィードバック送信テスト
     function test_SubmitFeedback() public {
-        // 配列を初期化
         string[] memory questions = new string[](3);
+
         questions[0] = "How is the product?";
         questions[1] = "Was the price appropriate?";
         questions[2] = "Would you recommend this product?";
@@ -64,9 +61,40 @@ contract FeedbackSystemTest is Test {
         assertEq(keccak256(bytes(feedbacks[0].comment)), keccak256(bytes("Good product!")));
     }
 
-    // スコアの境界値テスト（範囲外のスコアを送信）
+    function test_SubmitFeedbackBatch() public {
+        string[] memory questions = new string[](3);
+
+        questions[0] = "How is the product?";
+        questions[1] = "Was the price appropriate?";
+        questions[2] = "Would you recommend this product?";
+
+        feedbackSystem.createFeedbackForm("Product D", "Category 4", questions);
+
+        uint256[] memory scores = new uint256[](2);
+        scores[0] = 4;
+        scores[1] = 5;
+
+        string[] memory comments = new string[](2);
+        comments[0] = "Good value!";
+        comments[1] = "Excellent quality!";
+
+        vm.prank(user1);
+        feedbackSystem.submitFeedbackBatch(1, scores, comments);
+
+        (,, uint256 totalFeedbackScore, uint256 feedbackCount) = feedbackSystem.feedbackForms(1);
+
+        assertEq(totalFeedbackScore, 9);
+        assertEq(feedbackCount, 2);
+
+        FeedbackSystem.Feedback[] memory feedbacks = feedbackSystem.getFeedbacks(1);
+        assertEq(feedbacks.length, 2);
+        assertEq(feedbacks[0].score, 4);
+        assertEq(keccak256(bytes(feedbacks[0].comment)), keccak256(bytes("Good value!")));
+        assertEq(feedbacks[1].score, 5);
+        assertEq(keccak256(bytes(feedbacks[1].comment)), keccak256(bytes("Excellent quality!")));
+    }
+
     function test_ScoreOutOfBounds() public {
-        // 配列を初期化
         string[] memory questions = new string[](3);
         questions[0] = "How is the product?";
         questions[1] = "Was the price appropriate?";
@@ -83,14 +111,12 @@ contract FeedbackSystemTest is Test {
         feedbackSystem.submitFeedback(1, 0, "Too low score!");
     }
 
-    // 存在しないフィードバックフォームに対するエラー処理テスト
     function test_SubmitFeedbackToNonExistentForm() public {
         vm.prank(user1);
         vm.expectRevert("Feedback form does not exist");
         feedbackSystem.submitFeedback(999, 3, "This form does not exist!");
     }
 
-    // フォームID取得テスト
     function test_GetFormIds() public {
         string[] memory questions = new string[](2);
         questions[0] = "Is the product durable?";
@@ -99,14 +125,11 @@ contract FeedbackSystemTest is Test {
         feedbackSystem.createFeedbackForm("Product X", "Category X", questions);
         feedbackSystem.createFeedbackForm("Product Y", "Category Y", questions);
 
-        // 2つのフィードバックフォームが作成されているか確認
         uint256 formIdCounter = feedbackSystem.getFeedbackIdCounter();
         assertEq(formIdCounter, 2);
     }
-    // 平均スコアの計算テスト
 
     function test_GetAverageScore() public {
-        // 配列を初期化
         string[] memory questions = new string[](3);
         questions[0] = "How is the product?";
         questions[1] = "Was the price appropriate?";
@@ -121,10 +144,9 @@ contract FeedbackSystemTest is Test {
         feedbackSystem.submitFeedback(1, 5, "Excellent product!");
 
         uint256 averageScore = feedbackSystem.getAverageScore(1);
-        assertEq(averageScore, 4); // (3 + 5) / 2 = 4
+        assertEq(averageScore, 4);
     }
 
-    // トークン送信テスト
     function test_SendToken() public {
         uint256 initialBalance = feedbackSystem.balanceOf(user1);
         uint256 amount = 100;
