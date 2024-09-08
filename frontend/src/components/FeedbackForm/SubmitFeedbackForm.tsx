@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { BrowserProvider, Contract } from "ethers";
 import { abi, contractAddresses } from "../../app/constants/contract";
+import axios from "axios"; // Axiosをインポート
 
 // 星評価のコンポーネント
 function StarRating({
@@ -46,6 +47,7 @@ export default function SubmitFeedbackForm({ id }: SubmitFeedbackFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [attestationId, setAttestationId] = useState(""); // アテステーションIDを保持
 
   useEffect(() => {
     const fetchFormDetails = async () => {
@@ -95,6 +97,8 @@ export default function SubmitFeedbackForm({ id }: SubmitFeedbackFormProps) {
     switch (chainId) {
       case BigInt(534351):
         return contractAddresses.scrollTestnet;
+      case BigInt(11155111):
+        return contractAddresses.sepolia;
       case BigInt(97):
         return contractAddresses.bnbTestnet;
       case BigInt(84532):
@@ -104,13 +108,25 @@ export default function SubmitFeedbackForm({ id }: SubmitFeedbackFormProps) {
     }
   };
 
-  const submitFeedback = async () => {
+  const signAndSubmit = async () => {
     if (!window.ethereum || !form) return;
 
     try {
       setLoading(true);
+
       const provider = new BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
+      const userAddress = await signer.getAddress();
+
+      // サーバーサイドでアテステーションを作成
+      const response = await axios.post("/api/attestation", {
+        userAddress,
+        schemaId: "0x2d", // スキーマIDを指定
+      });
+
+      console.log("Attestation ID:", response.data.attestation);
+      console.log("response", response);
+      setAttestationId(response.data.attestationId);
       const network = await provider.getNetwork();
       const selectedAddress = getContractAddress(network.chainId);
 
@@ -123,7 +139,12 @@ export default function SubmitFeedbackForm({ id }: SubmitFeedbackFormProps) {
       const contract = new Contract(selectedAddress, abi, signer);
 
       // フィードバックとスコアを一括で送信
-      const tx = await contract.submitFeedbackBatch(id, score, feedback); // スマートコントラクト側のsubmitFeedbackBatch関数を使用
+      const tx = await contract.submitFeedbackBatch(
+        id,
+        score,
+        feedback,
+        attestationId,
+      ); // アテステーションIDも一緒に送信
       await tx.wait();
 
       setSuccess(true);
@@ -165,7 +186,7 @@ export default function SubmitFeedbackForm({ id }: SubmitFeedbackFormProps) {
           ))}
 
           <button
-            onClick={submitFeedback}
+            onClick={signAndSubmit} // フィードバック送信前に署名とアテステーションを行う
             className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mt-4"
           >
             Submit Feedback

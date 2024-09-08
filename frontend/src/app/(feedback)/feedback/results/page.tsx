@@ -34,6 +34,9 @@ export default function ViewFeedbackForms() {
           case BigInt(534351): // Scroll Testnet ID
             selectedAddress = contractAddresses.scrollTestnet;
             break;
+          case BigInt(11155111): // Sepolia Testnet ID
+            selectedAddress = contractAddresses.sepolia;
+            break;
           case BigInt(97): // BNB Testnet ID
             selectedAddress = contractAddresses.bnbTestnet;
             break;

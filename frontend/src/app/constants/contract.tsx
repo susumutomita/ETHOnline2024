@@ -1,7 +1,10 @@
+import { sepolia } from "viem/chains";
+
 // constants/contract.js
 export const contractAddresses = {
-  scrollTestnet: "0x324cf87A3A2B92FADBCDe6798c1a7ac9949c973b",
-  bnbTestnet: "0x8DA7103A97f04689bBBEC96E09B20F74Be784D5D",
+  scrollTestnet: "0x2a50B50869Cd3DAad12EAC6C8C861DB69AAA073E",
+  bnbTestnet: "0x0D00Ac6C89381369bC4224B574363A25B00466b7",
+  sepolia: "0xd9A4876df5cb2D42b5c040A8061FBbFA519fED87",
   baseSepoliaTestnet: "0x824134809a3805F831fb2A7e8e673fd94E8d521F",
 };
 export const abi = [
@@ -187,6 +190,11 @@ export const abi = [
         type: "string",
         internalType: "string",
       },
+      {
+        name: "attestationId",
+        type: "string",
+        internalType: "string",
+      },
     ],
     stateMutability: "view",
   },
@@ -274,6 +282,11 @@ export const abi = [
           },
           {
             name: "comment",
+            type: "string",
+            internalType: "string",
+          },
+          {
+            name: "attestationId",
             type: "string",
             internalType: "string",
           },
@@ -425,6 +438,11 @@ export const abi = [
         type: "string",
         internalType: "string",
       },
+      {
+        name: "_attestationId",
+        type: "string",
+        internalType: "string",
+      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -447,6 +465,11 @@ export const abi = [
         name: "comments",
         type: "string[]",
         internalType: "string[]",
+      },
+      {
+        name: "attestationId",
+        type: "string",
+        internalType: "string",
       },
     ],
     outputs: [],
@@ -618,6 +641,12 @@ export const abi = [
       },
       {
         name: "comment",
+        type: "string",
+        indexed: false,
+        internalType: "string",
+      },
+      {
+        name: "attestationId",
         type: "string",
         indexed: false,
         internalType: "string",

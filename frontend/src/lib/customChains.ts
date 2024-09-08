@@ -2,6 +2,28 @@
 
 import { Chain } from "wagmi/chains";
 
+export const sepolia: Chain = {
+  id: 11155111,
+  name: "Sepolia",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://rpc.sepolia.org"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "Sepolia Testnet Explorer",
+      url: "https://sepolia.etherscan.io/",
+    },
+  },
+  testnet: true,
+};
+
 export const scrollSepolia: Chain = {
   id: 534351,
   name: "Scroll Sepolia",

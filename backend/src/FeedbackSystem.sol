@@ -12,6 +12,7 @@ contract FeedbackSystem is ERC20, Ownable {
         address customer;
         uint256 score;
         string comment;
+        string attestationId; // 追加: アテステーションIDを保存
     }
 
     struct FeedbackForm {
@@ -32,7 +33,9 @@ contract FeedbackSystem is ERC20, Ownable {
     uint256[] public formIds;
 
     event FeedbackFormCreated(uint256 indexed formId, string productName, string category);
-    event FeedbackSubmitted(uint256 indexed formId, address indexed customer, uint256 score, string comment);
+    event FeedbackSubmitted(
+        uint256 indexed formId, address indexed customer, uint256 score, string comment, string attestationId
+    ); // 追加: イベントにattestationIdを含める
 
     constructor() ERC20("FeedbackToken", "FBT") Ownable(msg.sender) {
         _mint(msg.sender, 1000000 * 10 ** decimals());
@@ -60,21 +63,36 @@ contract FeedbackSystem is ERC20, Ownable {
         return formIds;
     }
 
-    function submitFeedback(uint256 _formId, uint256 _score, string memory _comment) external {
+    // 単一のフィードバック送信: attestationIdを追加
+    function submitFeedback(uint256 _formId, uint256 _score, string memory _comment, string memory _attestationId)
+        external
+    {
         require(_score >= 1 && _score <= 5, "Score must be between 1 and 5");
         require(bytes(feedbackForms[_formId].productName).length > 0, "Feedback form does not exist");
 
         feedbacks[_formId].push(
-            Feedback({id: feedbacks[_formId].length + 1, customer: msg.sender, score: _score, comment: _comment})
+            Feedback({
+                id: feedbacks[_formId].length + 1,
+                customer: msg.sender,
+                score: _score,
+                comment: _comment,
+                attestationId: _attestationId
+            })
         );
 
         feedbackForms[_formId].totalFeedbackScore += _score;
         feedbackForms[_formId].feedbackCount += 1;
 
-        emit FeedbackSubmitted(_formId, msg.sender, _score, _comment);
+        emit FeedbackSubmitted(_formId, msg.sender, _score, _comment, _attestationId);
     }
 
-    function submitFeedbackBatch(uint256 formId, uint256[] memory scores, string[] memory comments) external {
+    // 複数のフィードバック送信: attestationIdを追加
+    function submitFeedbackBatch(
+        uint256 formId,
+        uint256[] memory scores,
+        string[] memory comments,
+        string memory attestationId
+    ) external {
         require(scores.length == comments.length, "Scores and comments length mismatch");
         require(scores.length > 0, "No feedback provided");
 
@@ -87,7 +105,8 @@ contract FeedbackSystem is ERC20, Ownable {
                     id: feedbacks[formId].length + 1,
                     customer: msg.sender,
                     score: scores[i],
-                    comment: comments[i]
+                    comment: comments[i],
+                    attestationId: attestationId // アテステーションIDを記録
                 })
             );
 
@@ -95,10 +114,9 @@ contract FeedbackSystem is ERC20, Ownable {
         }
 
         feedbackForms[formId].totalFeedbackScore += totalScoreForThisFeedback;
-
         feedbackForms[formId].feedbackCount += 1;
 
-        emit FeedbackSubmitted(formId, msg.sender, scores[0], comments[0]); // 最初の質問の情報をイベントに
+        emit FeedbackSubmitted(formId, msg.sender, scores[0], comments[0], attestationId); // イベントにattestationIdを追加
     }
 
     function getFeedbackIdCounter() external view returns (uint256) {

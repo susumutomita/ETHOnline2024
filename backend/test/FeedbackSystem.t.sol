@@ -44,9 +44,9 @@ contract FeedbackSystemTest is Test {
         questions[2] = "Would you recommend this product?";
 
         feedbackSystem.createFeedbackForm("Product B", "Category 2", questions);
-
+        string memory attestationId = "attestation_12345";
         vm.prank(user1);
-        feedbackSystem.submitFeedback(1, 4, "Good product!");
+        feedbackSystem.submitFeedback(1, 4, "Good product!", attestationId);
 
         (,, uint256 totalFeedbackScore, uint256 feedbackCount) = feedbackSystem.feedbackForms(1);
 
@@ -57,6 +57,7 @@ contract FeedbackSystemTest is Test {
         assertEq(feedbacks.length, 1);
         assertEq(feedbacks[0].score, 4);
         assertEq(keccak256(bytes(feedbacks[0].comment)), keccak256(bytes("Good product!")));
+        assertEq(feedbacks[0].attestationId, attestationId); // attestationIdの検証
     }
 
     function test_SubmitFeedbackBatch() public {
@@ -79,7 +80,7 @@ contract FeedbackSystemTest is Test {
         comments[2] = "Nice product!";
 
         vm.prank(user1);
-        feedbackSystem.submitFeedbackBatch(1, scores, comments);
+        feedbackSystem.submitFeedbackBatch(1, scores, comments, "attestation_12345");
 
         (,, uint256 totalFeedbackScore, uint256 feedbackCount) = feedbackSystem.feedbackForms(1);
 
@@ -103,17 +104,17 @@ contract FeedbackSystemTest is Test {
 
         vm.prank(user1);
         vm.expectRevert("Score must be between 1 and 5");
-        feedbackSystem.submitFeedback(1, 6, "Too high score!");
+        feedbackSystem.submitFeedback(1, 6, "Too high score!", "attestation_12345");
 
         vm.prank(user1);
         vm.expectRevert("Score must be between 1 and 5");
-        feedbackSystem.submitFeedback(1, 0, "Too low score!");
+        feedbackSystem.submitFeedback(1, 0, "Too low score!", "attestation_12345");
     }
 
     function test_SubmitFeedbackToNonExistentForm() public {
         vm.prank(user1);
         vm.expectRevert("Feedback form does not exist");
-        feedbackSystem.submitFeedback(999, 3, "This form does not exist!");
+        feedbackSystem.submitFeedback(999, 3, "This form does not exist!", "attestation_12345");
     }
 
     function test_GetFormIds() public {
@@ -137,10 +138,10 @@ contract FeedbackSystemTest is Test {
         feedbackSystem.createFeedbackForm("Product C", "Category 3", questions);
 
         vm.prank(user1);
-        feedbackSystem.submitFeedback(1, 3, "Average product.");
+        feedbackSystem.submitFeedback(1, 3, "Average product.", "attestation_12345");
 
         vm.prank(user2);
-        feedbackSystem.submitFeedback(1, 5, "Excellent product!");
+        feedbackSystem.submitFeedback(1, 5, "Excellent product!", "attestation_12345");
 
         uint256 averageScore = feedbackSystem.getAverageScore(1);
         assertEq(averageScore, 4);

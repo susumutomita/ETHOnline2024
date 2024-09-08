@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Contract, BrowserProvider } from "ethers";
+import { Contract, BrowserProvider, ethers } from "ethers";
 import FeedbackFormFields from "@/components/FeedbackForm/FeedbackFormFields";
 import TokenDetailsForm from "@/components/FeedbackForm/TokenDetailsForm";
 import QuestionList from "@/components/FeedbackForm/QuestionList";
@@ -101,9 +101,13 @@ export default function FeedbackForm({
       const network = await provider.getNetwork();
 
       let selectedAddress = "";
+      console.log("Network ID:", network.chainId);
       switch (BigInt(network.chainId)) {
         case BigInt(534351): // Scroll Testnet ID
           selectedAddress = contractAddresses.scrollTestnet;
+          break;
+        case BigInt(11155111): // Scroll Testnet ID
+          selectedAddress = contractAddresses.sepolia;
           break;
         case BigInt(97): // BNB Testnet ID
           selectedAddress = contractAddresses.bnbTestnet;
@@ -119,6 +123,7 @@ export default function FeedbackForm({
       const contract = new Contract(selectedAddress, abi, signer);
 
       const questionTexts = questions.map((question) => question.text);
+      console.log("Submitting form to blockchain:", questionTexts);
 
       const tx = await contract.createFeedbackForm(
         productName,
