@@ -121,7 +121,7 @@ export default function SubmitFeedbackForm({ id }: SubmitFeedbackFormProps) {
       // サーバーサイドでアテステーションを作成
       const response = await axios.post("/api/attestation", {
         userAddress,
-        schemaId: "0x2d", // スキーマIDを指定
+        schemaId: "0x1d3",
       });
 
       console.log("Attestation ID:", response.data.attestation);
