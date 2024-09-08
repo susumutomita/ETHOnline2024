@@ -1,6 +1,6 @@
 // constants/contract.js
 export const contractAddresses = {
-  scrollTestnet: "0x324cf87A3A2B92FADBCDe6798c1a7ac9949c973b",
+  scrollTestnet: "0x24009FE90840A8acC359184A34BD8aC675C9754b",
   bnbTestnet: "0x8DA7103A97f04689bBBEC96E09B20F74Be784D5D",
   baseSepoliaTestnet: "0x824134809a3805F831fb2A7e8e673fd94E8d521F",
 };

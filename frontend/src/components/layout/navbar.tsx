@@ -43,6 +43,10 @@ export default function NavBar() {
               View Feedback
             </Link>
             <span className="text-gray-300">|</span>
+            <Link href="/sign" className="text-gray-500 hover:underline">
+              Sign Account
+            </Link>
+            <span className="text-gray-300">|</span>
             <Link href="/about" className="text-gray-500 hover:underline">
               About
             </Link>
