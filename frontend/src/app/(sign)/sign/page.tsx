@@ -29,11 +29,13 @@ export default function SignPage() {
         const sig = await signer.signMessage(message);
         setSignature(sig);
 
-        const response = await axios.post("api/attestation", {
+        const response = await axios.post("/api/attestation", {
           userAddress,
-          schemaId: "0x2d",
+          schemaId: "0x1d5",
         });
 
+        console.log("Attestation ID:", response.data.attestationId);
+        console.log("response", response);
         // サーバーからのレスポンスを反映
         setAttestationId(response.data.attestationId);
         setTxHash(response.data.txHash);

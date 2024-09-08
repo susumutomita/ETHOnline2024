@@ -22,12 +22,15 @@ export default async function handler(
       return res.status(500).json({ error: "Private key not configured" });
     }
 
+    console.log(privateKey);
     const client = new SignProtocolClient(SpMode.OnChain, {
-      chain: EvmChains.scrollSepolia,
+      chain: EvmChains.sepolia,
       account: privateKeyToAccount(`0x${privateKey}`),
     });
+    console.log(client);
+    console.log("Creating attestation for user:", userAddress);
+    console.log("Schema ID:", schemaId);
 
-    // Attestation作成
     const resAttestation = await client.createAttestation({
       schemaId,
       data: {
@@ -36,6 +39,7 @@ export default async function handler(
       indexingValue: userAddress.toLowerCase(),
     });
 
+    console.log("Attestation created:", resAttestation);
     return res.status(200).json({
       attestationId: resAttestation.attestationId,
       txHash: resAttestation.txHash,
