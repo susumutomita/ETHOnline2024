@@ -22,7 +22,6 @@ export default async function handler(
       return res.status(500).json({ error: "Private key not configured" });
     }
 
-    console.log(privateKey);
     const client = new SignProtocolClient(SpMode.OnChain, {
       chain: EvmChains.sepolia,
       account: privateKeyToAccount(`0x${privateKey}`),
