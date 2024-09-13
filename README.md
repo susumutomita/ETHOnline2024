@@ -6,6 +6,8 @@
 
 # BlockFeedback
 
+ETH Global Link : https://ethglobal.com/showcase/blockfeedback-zhykm
+
 <div style="text-align: center;">
   <img src="./images/logo.png" width="200" height="200" alt="BlockFeedback Logo"/>
 </div>
